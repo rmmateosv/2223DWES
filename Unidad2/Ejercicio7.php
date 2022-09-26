@@ -12,7 +12,7 @@
     	  
     	  for($i=0;$i<sizeof($array1);$i++){
     	      if(gettype($array1[$i])=="array"){
-    	          foreach ($array1[$i] as $clave =>$valor){
+    	          foreach ($array1[$i] as $clave=>$valor){
     	              echo "<br/>=>$clave:$valor";
     	          }
     	      }
@@ -22,7 +22,19 @@
     	  }
     	  
     	  ?>
-    	
+    	<h1>OTRA FORMA DE HACERLO</h1>
+    	<?php 
+    	for($i=0;$i<sizeof($array1);$i++){
+    	    if(is_array($array1[$i])){
+    	        foreach ($array1[$i] as $clave=>$valor){
+    	            echo "<br/>=>$clave:$valor";
+    	        }
+    	    }
+    	    else{
+    	        echo "<br/>Posición $i:".gettype($array1[$i])."- Valor:$array1[$i]";
+    	    }
+    	}
+    	?>
     	
     </body>
 </html>
