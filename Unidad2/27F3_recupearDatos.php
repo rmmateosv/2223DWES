@@ -81,6 +81,20 @@
 	    echo "</ul>";
 	    
 	    echo "<br/>Curso:".$_POST["curso"];
+	    echo "<br/>Forma de acceso:".$_POST["acceso"];
+	    
+	    echo "<br/>Módulos:";
+	    if(isset($_POST["modulos"])){
+	        $modulos = $_POST["modulos"];
+	        echo "<ul>";
+	        foreach ($modulos as $m){
+	            echo "<li>$m</li>";
+	        }
+	        echo "</ul>";
+	    }
+	    else{
+	        echo "<br/>No se ha seleccionado ningún módulo";
+	    }
 	    
 	}
 	?>
