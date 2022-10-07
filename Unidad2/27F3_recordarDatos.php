@@ -15,6 +15,11 @@ function rellenarFecha(){
     }
     
 }
+function rellenarSeleccionado($opcion) {
+    if(isset($_POST["modulos"]) and in_array($opcion, $_POST["modulos"])){
+        echo "selected='selected'";   
+    }
+}
 ?>
 </head>
 <body>
@@ -82,21 +87,36 @@ function rellenarFecha(){
     		<p>
     			<label>Forma de acceso</label><br/>
     			<select name="acceso">
-    				<option>Bachillerato</option>
-    				<option selected="selected">Grado Medio</option>
-    				<option label="Grado Superior">grado</option>
-    				<option value="otros">Otros</option>
+    				<option 
+                    <?php if(isset($_POST["acceso"]) 
+    				    and $_POST["acceso"]=='Bachillerato'){
+    				    echo "selected='selected'";
+    				}?>>Bachillerato</option>
+    				<option <?php if(!isset($_POST["acceso"]) 
+    				    or $_POST["acceso"]=='Grado Medio'){
+    				    echo "selected='selected'";
+    				}?>>Grado Medio</option>
+    				<option label="Grado Superior" 
+    				<?php if(isset($_POST["acceso"]) 
+    				    and $_POST["acceso"]=='grado'){
+    				    echo "selected='selected'";
+    				}?>>grado</option>
+    				<option value="otros" 
+    				<?php if(isset($_POST["acceso"]) 
+    				    and $_POST["acceso"]=='otros'){
+    				    echo "selected='selected'";
+    				}?>>Otros</option>
     			</select>
     		</p>
     		<p>
     			<label>Marca los módulos en los que te matriculas</label><br/>
     			<select name="modulos[]" multiple="multiple">
-    				<option value="1_LM">LM</option>
-    				<option value="1_PRO">PRO</option>
-    				<option value="1_DB">DB</option>
-    				<option value="2_DWES">DWES</option>
-    				<option value="2_DWEC">DWEC</option>
-    				<option value="2_DIW">DIW</option>
+    				<option value="1_LM" <?php rellenarSeleccionado("1_LM")?>>LM</option>
+    				<option value="1_PRO" <?php rellenarSeleccionado("1_PRO")?>>PRO</option>
+    				<option value="1_DB" <?php rellenarSeleccionado("1_DB")?>>DB</option>
+    				<option value="2_DWES" <?php rellenarSeleccionado("2_DWES")?>>DWES</option>
+    				<option value="2_DWEC" <?php rellenarSeleccionado("2_DWEC")?>>DWEC</option>
+    				<option value="2_DIW" <?php rellenarSeleccionado("2_DIW")?>>DIW</option>
     			</select>
     		</p>
     		<p>
