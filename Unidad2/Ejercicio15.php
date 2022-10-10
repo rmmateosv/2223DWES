@@ -6,7 +6,7 @@
 </head>
 <body>
 	
-	<form action="Ejercio14_Recup.php" method="post">
+	<form action="Ejercio15_Recup.php" method="post" enctype="multipart/form-data">
 	<fieldset>
 	
 		<legend>Datos Personales</legend>
@@ -71,7 +71,12 @@
 		<option>4 o más</option>
 	</select>
 	
-	<br>
+	<br/>
+	<p>
+	<label>Sube tu foto</label>
+	<br/>
+	<input type="file" name="foto"/>
+	</p>
 	
 	<label>Aficiones</label>
 

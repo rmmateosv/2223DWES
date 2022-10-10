@@ -40,6 +40,19 @@
 	    
 	    echo "<br>Comentario Añadido: " .$_POST["Comentario"];
 	    
+	    echo "<br>Elemento foto:".$_FILES["foto"]["name"];
+	    if(isset($_FILES["foto"])){
+	        //Establecer fichero destino
+	        $destino = "fotos/".$_FILES["foto"]["name"];
+	        //Obtenemos el fichero temporal que se ha subido al servidor
+	        //al hacer el submit
+	        $ftmp = $_FILES["foto"]["tmp_name"];
+	        if(move_uploaded_file($ftmp, $destino)){
+	            echo "<img src='$destino'/>";
+	        }
+	        
+	    }
+	    
 	}
 	
 	
