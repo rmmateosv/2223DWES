@@ -1,33 +1,5 @@
 <?php 
-include_once 'Alumno.php';
-
-//Definición de funciones
-function guardarAlumno(Alumno $alumno){
-    //Abrimos el fichero alumnos.txt
-    $fichero = fopen("alumnos.txt", "a+");
-    //Escribimos el alumno
-    fwrite($fichero, $alumno->getExp().";".
-                     $alumno->getNombre().";".
-                     date("d/m/Y",$alumno->getFechaN()));
-    //Escribimos asignaturas con el forato LM:10
-    foreach ($alumno->getAsig() as $a=>$n){
-        fwrite($fichero, ";".$a.":".$n);
-    }
-    //Se escribe el fin de línea
-    fwrite($fichero, "\n");
-}
-function cargarAlumnos(){
-
-    $array= file("alumnos.txt");
-    
-    foreach ($array as $linea){
-        //Dividimos la línea en campos
-        $campos = explode(";", $linea);        
-        //Crear alumno
-        $alumno = new Alumno($campos[0], $campos[1], $campos[2]);
-    }
-    
-}
+include_once 'accesoFichero.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -80,6 +52,9 @@ function cargarAlumnos(){
 	
 	//Mostrar los alumnos que hay en el fichero
 	$alumnos = cargarAlumnos();
+	foreach($alumnos as $a){
+	    $a->mostrar();
+	}
 	?>
 </body>
 </html>

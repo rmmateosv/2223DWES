@@ -5,7 +5,10 @@ class Alumno{
     private $fechaN;
     private $asig=array();
     
-    
+    //Añadir nota
+    function addNota($asig,$nota) {
+        $this->asig[$asig]=$nota;
+    }
     //Mostrar
     function mostrar(){
         echo "<h3>Alumno:$this->nombre - $this->exp - ".
