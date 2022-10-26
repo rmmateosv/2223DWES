@@ -1,28 +1,28 @@
 <?php
-require_once 'Producto.php';
+require_once 'Cita.php';
 
-function guardarProducto(Producto $p){
+function guardarCita(Cita $c){
     //Abrimos el fichero
-    $f = fopen("Productos.txt", "a+");
+    $f = fopen("Citas.txt", "a+");
     //Escribimos los datos
-    fwrite($f, $p->getCodigo().";".$p->getNombre().";".$p->getPrecio().";".$p->getStock()."\n");
+    fwrite($f, $c->getFecha().";".$c->getHora().";".$c->getNombre().";".$c->getTipoServicio()."\n");
     
     //Cerramos fichero
     fclose($f);
 }
 
-function obtenerProductos() {
+function obtenerCitas() {
     $resultado = array();
     
     //Obtenemos las líneas del fichero en un array
-    $datosTXT = file("Productos.txt"); 
+    $datosTXT = file("Citas.txt"); 
     //Convertimos cada línea en un objeto Producto
     foreach ($datosTXT as $linea){        
         $campos=explode(";",substr($linea, 0, strlen($linea)-1));
         //Creamos objeto producto
-        $p=new Producto($campos[0], $campos[1], $campos[2], $campos[3]);
+        $c=new Cita(date("d/m/Y",strtodate($campos[0])), $campos[1], $campos[2], $campos[3]);
         //Añadimos el producto al array que se devuelve
-        $resultado[]=$p;
+        $resultado[]=$c;
     }
     
     return $resultado;
