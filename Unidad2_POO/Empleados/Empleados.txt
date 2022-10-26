@@ -1,0 +1,4 @@
+1;fadfas;927444444;;;RRHH
+1;paco;927444444;754123654;;Ventas
+3;mariá;927444444;754123456;925123654;Contabilidad
+45;Alexander;1;2;3;RRHH

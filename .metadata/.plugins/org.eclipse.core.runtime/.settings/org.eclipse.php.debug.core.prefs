@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+org.eclipse.php.debug.core.pathMapper=<pathMappers></pathMappers>
 org.eclipse.php.debug.core.xdebugDebuggerSettingsProvider=<settings><proxyEnable>false</proxyEnable><clientPort>9000</clientPort><ownerId>php-server-a23b34a6-5e98-49cf-ad5b-fc060d53b072</ownerId><proxyIdeKey>ECLIPSE_DBGP_xxx</proxyIdeKey><proxyAddress></proxyAddress></settings>
 org.eclipse.php.debug.core.xdebug_arrayDepth=3
 org.eclipse.php.debug.core.xdebug_capturestderr=1

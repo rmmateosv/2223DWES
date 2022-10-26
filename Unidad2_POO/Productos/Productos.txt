@@ -1,0 +1,2 @@
+1;Leche entera;0.80;300
+2;Macarrones;0.50;278

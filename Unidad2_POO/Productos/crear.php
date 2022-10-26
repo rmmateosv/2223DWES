@@ -1,5 +1,6 @@
 <?php
 require_once 'Producto.php';
+require_once 'funcionesFicheros.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -20,7 +21,7 @@ require_once 'Producto.php';
 		</p>
 		<p>
 			<label>Precio</label><br/>
-			<input type="number" name="precio" placeholder="Precio" step="0.1"/>
+			<input type="number" name="precio" placeholder="Precio" step="0.01"/>
 		</p>
 		<p>
 			<label>Stock</label><br/>
@@ -42,7 +43,7 @@ require_once 'Producto.php';
 	        $p = new Producto($_POST['codigo'], $_POST['nombre'], 
 	                          $_POST['precio'], $_POST['stock']);
 	        //Guardamos el producto en el fichero productos.txt
-	        
+	        guardarProducto($p);
 	    }
 	}
 	?>
