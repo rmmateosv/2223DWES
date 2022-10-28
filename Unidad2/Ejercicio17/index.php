@@ -9,7 +9,7 @@ require_once 'funcionesFicheros.php';
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="" method="posr">
+	<form action="" method="post">
 		<p>
 			<label>Fecha Cita</label><br/>
 			<input type="date" name="fecha"/>
