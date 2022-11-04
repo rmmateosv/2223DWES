@@ -75,7 +75,7 @@
 	        $mensaje="Error, si el motor es diesel o gasolina no puede ser PGE";
 	    }
 	    
-	    if($_POST["tipoC"]=="Organismo Público" and $_POST["precio"] > "15000"){
+	    if($_POST["tipoC"]=="Organismo Público" and $_POST["precio"] > 15000){
 	        $mensaje="Error, el precio no puede ser > 15000";
 	    }
 	    if(isset($mensaje)){
