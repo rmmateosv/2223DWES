@@ -24,6 +24,50 @@ class AccesoDatos
         }
         
     }
+    public function hayReparciones($vSel){
+        $resultado = true;
+        try {
+            
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
+    
+    public function borrarVehiculo($vSel){
+        $resultado = "Error, al borrar el vehículo";
+        try {
+            $consulta = $this->conexion->prepare("delete from vehiculo where codigo = ?");
+            $params = array($vSel->getCodigo());
+            $numReg = $consulta->execute($params);
+            if($numReg==1){
+                $resultado = "Vehículo borrado";
+            }
+            
+        } catch (PDOException $e) {
+            $e->getMessage();
+        }
+        return $resultado;
+    }
+    public function modificarVehiculo($vSel){
+        $resultado = "Error, al modificar el vehículo";
+        try {
+            $consulta = $this->conexion->prepare("update vehiculo set 
+                nombrePropietario = ?, matricula = ?, color = ?,
+                telefono = ?, email = ? 
+                where codigo = ?");
+            $params = array($vSel->getPropietario(), $vSel->getMatricula(),$vSel->getColor(),
+                            $vSel->getTelefono(), $vSel->getEmail(),$vSel->getCodigo());
+            $numReg = $consulta->execute($params);
+            if($numReg==1){
+                $resultado = "Vehículo modificado";
+            }
+            
+        } catch (PDOException $e) {
+            $e->getMessage();
+        }
+        return $resultado;
+    }
     public function obtenerVehiculo($codigo){
         $resultado=null;
         try {

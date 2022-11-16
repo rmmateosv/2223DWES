@@ -31,7 +31,32 @@ function rellenarSelect(Vehiculo $v, Vehiculo $vSel){
         }else{
             $vSel = $bd->obtenerPrimerVehiculo();
         }
-
+        
+        //Modificamos los datos del vehículo si se ha pulsado en modificar
+        if(isset($_POST["modificar"])){
+            //Datos del vehiculo a modificar
+            $vSel->setPropietario($_POST["propietario"]);
+            $vSel->setMatricula(empty($_POST["matricula"])?null:$_POST["matricula"]);
+            $vSel->setColor(empty($_POST["color"])?null:$_POST["color"]);
+            $vSel->setEmail(empty($_POST["email"])?null:$_POST["email"]);
+            $vSel->setTelefono($_POST["telefono"]);
+            
+            //Modificamos el vehículo
+            $mensaje = $bd->modificarVehiculo($vSel);
+        }
+        //Borrar vehículo si se ha pulsado en borrar
+        if(isset($_POST["borrar"])){
+            //Chequear si un vehículo tiene reparciones
+            if($bd->hayReparciones($vSel)){
+                $mensaje = "No se puede borrar el vehículo porque hay reparaciones";
+            }
+            else{
+                $mensaje = $bd->borrarVehiculo($vSel);
+                //¿Debemos recargar la página? => No, porque no vemos el mensaje
+                // Podemos seleccionar el primer vehículo
+                $vSel= $bd->obtenerPrimerVehiculo();
+            }
+        }
         ?><!--  -->
         <form action="" method="post">
         	<p>
