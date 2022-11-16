@@ -7,7 +7,7 @@ use taller\Vehiculo;
 
 function rellenarSelect(Vehiculo $v, Vehiculo $vSel){
     if($v->getCodigo()==$vSel->getCodigo()){
-        echo "selected='selected'";
+        return "selected='selected'";
     }
 }
 
