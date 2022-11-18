@@ -34,15 +34,25 @@ function rellenarSelect(Vehiculo $v, Vehiculo $vSel){
         
         //Modificamos los datos del vehículo si se ha pulsado en modificar
         if(isset($_POST["modificar"])){
-            //Datos del vehiculo a modificar
-            $vSel->setPropietario($_POST["propietario"]);
-            $vSel->setMatricula(empty($_POST["matricula"])?null:$_POST["matricula"]);
-            $vSel->setColor(empty($_POST["color"])?null:$_POST["color"]);
-            $vSel->setEmail(empty($_POST["email"])?null:$_POST["email"]);
-            $vSel->setTelefono($_POST["telefono"]);
-            
-            //Modificamos el vehículo
-            $mensaje = $bd->modificarVehiculo($vSel);
+            if(empty($_POST["propietario"]) or empty($_POST["telefono"])){
+                $mensaje = "Error, el nombre propietario y teléfono no pueden estar vacíos";
+            }
+            elseif(!empty($_POST["matricula"]) && 
+                $_POST["matricula"]!=$vSel->getMatricula() &&
+                $bd->existeMatricula($_POST["matricula"])){
+                $mensaje = "Error, la matrícula ya existe";
+            }
+            else{
+                //Datos del vehiculo a modificar
+                $vSel->setPropietario($_POST["propietario"]);
+                $vSel->setMatricula(empty($_POST["matricula"])?null:$_POST["matricula"]);
+                $vSel->setColor(empty($_POST["color"])?null:$_POST["color"]);
+                $vSel->setEmail(empty($_POST["email"])?null:$_POST["email"]);
+                $vSel->setTelefono($_POST["telefono"]);
+                
+                //Modificamos el vehículo
+                $mensaje = $bd->modificarVehiculo($vSel);
+            }
         }
         //Borrar vehículo si se ha pulsado en borrar
         if(isset($_POST["borrar"])){

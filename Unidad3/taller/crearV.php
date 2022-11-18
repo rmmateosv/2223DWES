@@ -23,6 +23,9 @@ use taller\Vehiculo;
             if(empty($_POST["propietario"]) or empty($_POST["telefono"])){
                 $mensaje = "Error, el nombre propietario y teléfono no pueden estar vacíos";
             }
+            elseif(!empty($_POST["matricula"]) && $bd->existeMatricula($_POST["matricula"])){
+                $mensaje = "Error, la matrícula ya existe";
+            }
             else{
                 $v = new Vehiculo();
                 $v->setPropietario($_POST["propietario"]);

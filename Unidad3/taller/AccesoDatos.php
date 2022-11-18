@@ -24,10 +24,49 @@ class AccesoDatos
         }
         
     }
-    public function hayReparciones($vSel){
+    
+    public function obtenerPiezas(){
+        $resultado = array();
+        try {
+            $datos = $this->conexion->query("select * from pieza");
+            while($filas=$datos->fetch()){
+                $p = new Pieza();
+                $p->setCodigo($filas["codigo"]);
+                $p->setClase($filas["clase"]);
+                $p->setDescripcion($filas["descripcion"]);
+                $p->setPrecio($filas["precio"]);
+                $p->setStock($filas["stock"]);
+                $resultado[]=$p;
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
+    
+    public function existeMatricula($matricula){
         $resultado = true;
         try {
-            
+            $consulta = $this->conexion->prepare("select * from vehiculo where matricula = ?");
+            $params = array($matricula);
+            $consulta->execute($params);
+            if(!$consulta->fetch()){
+                $resultado = false;
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
+    public function hayReparciones(Vehiculo $vSel){
+        $resultado = true;
+        try {
+            $consulta = $this->conexion->prepare("select * from reparacion where coche = ?");
+            $params = array($vSel->getCodigo());
+            $consulta->execute($params);
+            if(!$consulta->fetch()){
+                $resultado = false;
+            }
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -40,7 +79,7 @@ class AccesoDatos
             $consulta = $this->conexion->prepare("delete from vehiculo where codigo = ?");
             $params = array($vSel->getCodigo());
             $numReg = $consulta->execute($params);
-            if($numReg==1){
+            if($numReg){
                 $resultado = "Vehículo borrado";
             }
             
@@ -59,7 +98,7 @@ class AccesoDatos
             $params = array($vSel->getPropietario(), $vSel->getMatricula(),$vSel->getColor(),
                             $vSel->getTelefono(), $vSel->getEmail(),$vSel->getCodigo());
             $numReg = $consulta->execute($params);
-            if($numReg==1){
+            if($numReg){
                 $resultado = "Vehículo modificado";
             }
             
@@ -120,7 +159,7 @@ class AccesoDatos
                             $v->getColor(),$v->getTelefono(),$v->getEmail());
             //Ejecutar la consulta
             $numCoches = $consulta->execute($params);
-            if($numCoches==1){
+            if($numCoches){
                 //Devolvemos el código del coche que se ha insertado
                 $resultado=$this->conexion->lastInsertId();
             }
