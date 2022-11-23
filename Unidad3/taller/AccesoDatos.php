@@ -26,6 +26,52 @@ class AccesoDatos
         
     }
     
+    public function crearReparacionConPieza(Vehiculo $coche,Pieza $pieza,$cantidad){
+        $resultado  = -1;
+        try {
+            //Como hay que hacer dos insert, necesitamos transacción
+            $this->conexion->beginTransaction();
+            //Creamos reparación
+            $consulta = $this->conexion->prepare(
+                "insert into reparacion values (null,?,curtime(),0,false)");
+            $params = array($coche->getCodigo());
+            $ok=$consulta->execute($params);
+            if($ok){
+                //Recuperar el id de la reparación creada
+                $resultado = $this->conexion->lastInsertId();
+                //Insertamos la pieza en la reparación
+                $consulta = $this->conexion->prepare(
+                    "insert into piezareparacion values (?,?,?,?)");
+                $params = array($resultado,$pieza->getCodigo(),$pieza->getPrecio(),$cantidad);
+                $ok = $consulta->execute($params);
+                if($ok){
+                    //Restar el stock a la pieza
+                    $consulta = $this->conexion->prepare("update pieza
+                           set stock=stock - ?
+                           where codigo = ?");
+                    $params = array($cantidad,$pieza->getCodigo());
+                    $ok=$consulta->execute($params);
+                    if($ok){
+                        //Termina transacción con éxito
+                        $this->conexion->commit();
+                    }
+                    else{
+                        //Deshacemos
+                        $this->conexion->rollBack();
+                    }
+                }
+                else{
+                    //Deshacemos
+                    $this->conexion->rollBack();
+                }
+            }            
+          
+        } catch (PDOException $e) {
+            $this->conexion->rollBack();
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
     public function insertarPieza(Reparacion $r, Pieza $p,$c){
         $resultado = false;
         try {

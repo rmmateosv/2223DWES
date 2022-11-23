@@ -33,7 +33,7 @@ table{border-spacing:0;}
 	    include_once 'menu.php';
 	    
 	    $coches = $bd->obtenerVehiculos();
-	    $piezas = $bd->obtenerPiezas();
+	   
 	    
 	    if(isset($_POST['coche'])){
 	        $vSel = $bd->obtenerVehiculo($_POST['coche']);
@@ -45,28 +45,36 @@ table{border-spacing:0;}
 	    //Ver si hay una reparación creada
 	    $r = $bd->obtenerReparacion($vSel->getCodigo());
 	    //Añadir Pieza
-	    if(isset($_POST["addPieza"])){	        
-	        if($r!=null){
-	            //Hay reparación abierta, la pieza se añade a esa reparación
-	            $p = $bd->obtenerPieza($_POST["pieza"]);
-	            //Chequear si hay stock suficiente
-	            if($p->getStock()>= $_POST["cantidad"]){
+	    if(isset($_POST["addPieza"])){	  
+	        $p = $bd->obtenerPieza($_POST["pieza"]);
+	        
+	        //Chequear si hay stock suficiente
+	        if($p->getStock()>= $_POST["cantidad"]){	            
+    	        if($r!=null){
+    	            //Hay reparación abierta, la pieza se añade a esa reparación
+    	            
 	                $resultado = $bd->insertarPieza($r,$p,$_POST["cantidad"]);
 	                if($resultado){
 	                    $mensaje = "Pieza ".$_POST["pieza"]." añadida";
+	                    //Recargamos la reparación
+	                    $r = $bd->obtenerReparacion($vSel->getCodigo());
 	                }
 	                else{
 	                    $mensaje = "Error al añadir la pieza ".$_POST["pieza"];
 	                }
-	            }
-	            else{
-	                $mensaje = "No hay stock suficiente para la pieza ".$_POST["pieza"];
-	            }
+    	         } 	                	        
+    	        else{
+    	            //No hay reparación abierta, se debe crear  
+    	            $idRep = $bd->crearReparacionConPieza($vSel,$p,$_POST["cantidad"]);
+    	            $r=$bd->obtenerReparacion($vSel->getCodigo());
+    	            $mensaje = "Reparación $idRep creada";
+    	        }
 	        }
 	        else{
-	            //No hay reparación abierta, se debe crear
+	            $mensaje = "No hay stock suficiente para la pieza ".$_POST["pieza"];
 	        }
 	    }
+	    $piezas = $bd->obtenerPiezas();
 	   ?>
 	   <form action="" method="post">
 	   		<label>Selecciona vehículo</label>
@@ -101,6 +109,9 @@ table{border-spacing:0;}
 	   				?>
 	   			</tr>
 	   		</table>
+	   		<?php 
+	   		if($r!=null){
+	   		?>
 	   		<!--  DATOS DE LA REPARACIÓN -->
 	   		<h2>Datos de la reparación</h2>
 	   		<table align="center" border="1">
@@ -112,15 +123,40 @@ table{border-spacing:0;}
 	   			</tr>
 	   			<tr>
 	   				<?php
-	   				if($r!=null){
-    	   				echo "<td>".$r->getId()."</td>
-                	    	<td>".$r->getFecha()."</td>
-                	    	<td>".$r->getTiempo()."</td>
-                	    	<td>".$r->getPagado()."</td>";
-	   				}
+	   				
+	   				echo "<td>".$r->getId()."</td>
+            	    	<td>".$r->getFecha()."</td>
+            	    	<td>".$r->getTiempo()."</td>
+            	    	<td>".$r->getPagado()."</td>";
+	   				
 	   				?>
 	   			</tr>
 	   		</table>
+	   		
+	   		<!--  PIEZAS DE LA REPARACIÓN -->
+	   		<table align="center" border="1">
+	   			<tr>
+	   				<td>Código</td>
+	   				<td>Clase</td>
+	   				<td>Descripción</td>
+	   				<td>Precio</td>
+	   				<td>Cantidad</td>
+	   				<td>Total</td>
+	   			</tr>
+	   			<?php 
+	   			foreach ($r->getPiezas() as $pr){
+	   			    echo "<tr><td>".$pr->getPieza()->getCodigo()."</td>
+	   				<td>".$pr->getPieza()->getClase()."</td>
+	   				<td>".$pr->getPieza()->getDescripcion()."</td>
+	   				<td>".$pr->getImporte()."</td>
+	   				<td>".$pr->getCantidad()."</td>
+	   				<td>".($pr->getImporte()*$pr->getCantidad())."</td></tr>";
+	   			}
+	   			?>
+	   		</table>
+	   		<?php
+	   		} //If de si hay reparación
+	   		?>
 	   		<table>	
 	   			<tr><td>Pieza</td><td>Cantidad</td></tr>
 	   			<tr>
