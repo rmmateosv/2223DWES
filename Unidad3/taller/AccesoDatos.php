@@ -1,6 +1,7 @@
 <?php
 namespace taller;
 
+
 use PDOException;
 use PDO;
 
@@ -23,6 +24,134 @@ class AccesoDatos
             echo $e->getMessage();
         }
         
+    }
+    
+    public function insertarPieza(Reparacion $r, Pieza $p,$c){
+        $resultado = false;
+        try {
+            //Comenzar transacción porque hay que hacer insert y update
+            $this->conexion->beginTransaction();
+            //Chequear si ya existe la pieza en la reparación, habría que hacer update
+            //en vez de insert
+            //Recorremos el array de piezas de $r
+            $encontrado = false;
+            foreach ($r->getPiezas() as $pi){
+                if($pi->getPieza()->getCodigo()==$p->getCodigo()){
+                    $encontrado = true;
+                }
+            }
+            if($encontrado){
+                //Hacer update en piezaReparación
+                $consulta = $this->conexion->prepare("update piezareparacion 
+                    set cantidad = cantidad + ? 
+                    where reparacion = ? and pieza = ?");
+                $params = array($c,$r->getId(),$p->getCodigo());
+                $consulta->execute($params);
+            }
+            else{
+                //Hacer insert en piezaReparación
+                $consulta = $this->conexion->prepare("insert into piezareparacion 
+                              values (?,?,?,?)");
+                $params = array($r->getId(),$p->getCodigo(),$p->getPrecio(),$c);
+                $consulta->execute($params);
+            }
+            
+            //Acutalizar el stock
+            $consulta = $this->conexion->prepare("update pieza 
+                           set stock=stock - ? 
+                           where codigo = ?");
+            $params = array($c,$p->getCodigo());
+            $consulta->execute($params);
+            
+            //Finaliza haciendo los cambios de forma definitiva
+            $this->conexion->commit();
+            $resultado = true;
+        } catch (PDOException $e) {
+            //Deshacer los cambios que se hayan realizado
+            $this->conexion->rollBack();
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
+    public function obtenerPieza($codigo){
+        $resultado = null;
+        try {
+            $consulta = $this->conexion->prepare("select * from pieza where codigo = ?");
+            $params = array($codigo);
+            $consulta->execute($params);
+            if($fila=$consulta->fetch()){
+                $resultado = new Pieza();
+                $resultado->setCodigo($fila["codigo"]);
+                $resultado->setClase($fila["clase"]);
+                $resultado->setDescripcion($fila["descripcion"]);
+                $resultado->setPrecio($fila["precio"]);
+                $resultado->setStock($fila["stock"]);
+            }
+            
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
+    public function obtenerReparacion($codigo){
+        $resultado = null;
+        try {
+            $consulta = $this->conexion->prepare(
+                "select * from reparacion as r inner join vehiculo as v
+                    on r.coche = v.codigo
+                    where coche = ? and pagado = false order by id desc limit 1");
+            $params = array($codigo);
+            $consulta->execute($params);
+            if($fila=$consulta->fetch()){
+                $resultado = new Reparacion();
+                $resultado->setId($fila["id"]);
+                
+                //Crear vehículo
+                $v = new Vehiculo();
+                $v->setCodigo($codigo);
+                $v->setMatricula($fila["matricula"]);
+                $v->setColor($fila["color"]);
+                $v->setTelefono($fila["telefono"]);
+                $v->setEmail($fila["email"]);
+                $v->setPropietario($fila["nombrePropietario"]);
+                $resultado->setCoche($v);
+                
+                $resultado->setFecha($fila["fechaHora"]);
+                $resultado->setTiempo($fila["tiempo"]);
+                $resultado->setPagado($fila["pagado"]);
+                
+                //Piezas
+                $consulta = $this->conexion->prepare(
+                    "select * from reparacion as r inner join piezareparacion as pr 
+                                on r.id = pr.reparacion 
+                                inner join pieza as p on pr.pieza= p.codigo 
+                              where r.id = ?");
+                $params=array($resultado->getId());
+                $consulta->execute($params);
+                $piezas = array();
+                while($fila=$consulta->fetch()){
+                    //Rellenar piezaReparación en $resultado
+                    $pr = new PiezaReparacion();
+                    $pr->setRep($resultado);
+                    $pr->setCantidad($fila["cantidad"]);
+                    $pr->setImporte($fila["importe"]);
+                    // Objeto pieza
+                    $p = new Pieza();
+                    $p->setCodigo($fila["pieza"]);
+                    $p->setClase($fila["clase"]);
+                    $p->setDescripcion($fila["descripcion"]);
+                    $p->setPrecio($fila["precio"]);
+                    $p->setStock($fila["stock"]);
+                    $pr->setPieza($p);
+                    //Añadir la pr a reparación
+                    $piezas[]=$pr;                    
+                }
+                $resultado->setPiezas($piezas);
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
     }
     
     public function obtenerPiezas(){

@@ -2,6 +2,8 @@
 require_once 'AccesoDatos.php';
 require_once 'Vehiculo.php';
 require_once 'Pieza.php';
+require_once 'Reparacion.php';
+require_once 'PiezaReparacion.php';
 
 use taller\AccesoDatos;
 function seleccionar($c,$v) {
@@ -39,6 +41,32 @@ table{border-spacing:0;}
 	    else{
 	        $vSel = $bd->obtenerPrimerVehiculo();
 	    }
+	    
+	    //Ver si hay una reparación creada
+	    $r = $bd->obtenerReparacion($vSel->getCodigo());
+	    //Añadir Pieza
+	    if(isset($_POST["addPieza"])){	        
+	        if($r!=null){
+	            //Hay reparación abierta, la pieza se añade a esa reparación
+	            $p = $bd->obtenerPieza($_POST["pieza"]);
+	            //Chequear si hay stock suficiente
+	            if($p->getStock()>= $_POST["cantidad"]){
+	                $resultado = $bd->insertarPieza($r,$p,$_POST["cantidad"]);
+	                if($resultado){
+	                    $mensaje = "Pieza ".$_POST["pieza"]." añadida";
+	                }
+	                else{
+	                    $mensaje = "Error al añadir la pieza ".$_POST["pieza"];
+	                }
+	            }
+	            else{
+	                $mensaje = "No hay stock suficiente para la pieza ".$_POST["pieza"];
+	            }
+	        }
+	        else{
+	            //No hay reparación abierta, se debe crear
+	        }
+	    }
 	   ?>
 	   <form action="" method="post">
 	   		<label>Selecciona vehículo</label>
@@ -51,6 +79,8 @@ table{border-spacing:0;}
 	   			?>
 	   		</select>
 	   		<br/>
+	   		<!--  DATOS DEL COCHE -->
+	   		<h2>Datos del vehículo</h2>
 	   		<table align="center" border="1">
 	   			<tr>
 	   				<td>Código</td>
@@ -71,6 +101,26 @@ table{border-spacing:0;}
 	   				?>
 	   			</tr>
 	   		</table>
+	   		<!--  DATOS DE LA REPARACIÓN -->
+	   		<h2>Datos de la reparación</h2>
+	   		<table align="center" border="1">
+	   			<tr>
+	   				<td>Id</td>
+	   				<td>Fecha</td>
+	   				<td>Tiempo</td>
+	   				<td>Pagado</td>
+	   			</tr>
+	   			<tr>
+	   				<?php
+	   				if($r!=null){
+    	   				echo "<td>".$r->getId()."</td>
+                	    	<td>".$r->getFecha()."</td>
+                	    	<td>".$r->getTiempo()."</td>
+                	    	<td>".$r->getPagado()."</td>";
+	   				}
+	   				?>
+	   			</tr>
+	   		</table>
 	   		<table>	
 	   			<tr><td>Pieza</td><td>Cantidad</td></tr>
 	   			<tr>
@@ -79,17 +129,21 @@ table{border-spacing:0;}
 	   						<?php
 	   						foreach ($piezas as $p){
 	   						    echo "<option value='".$p->getCodigo()."'>
-                                 ".$p->getCodigo()."-".$p->getClase()."-".$p->getDescripcion()
+                                 ".$p->getCodigo()."-".$p->getClase()."-".$p->getDescripcion()."-".$p->getStock()
                                    ."</option>";
 	   						}
 	   						?>
 	   					</select>
 	   				</td>
-	   				<td><input type="number" value="1"/></td></tr>
+	   				<td><input type="number" name="cantidad" value="1"/></td>
+	   				<td><input type="submit" name="addPieza" value="Añadir Pieza"/></td>
+	   				</tr>
 	   		</table>
 	   </form>
 	   <?php 
-        
+	   if(isset($mensaje)){
+	       echo "<h2 style='color:red'>$mensaje</h2>";
+	   }
 	}
 	else{
 	    echo "Error, no hay conexión con la BD";
