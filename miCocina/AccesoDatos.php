@@ -1,4 +1,6 @@
 <?php
+require_once 'Usuario.php';
+
 class AccesoDatos{
     private $conexion = null;
     
@@ -14,6 +16,28 @@ class AccesoDatos{
             echo $e->getMessage();
         }
         
+    }
+    public function obtenerUsuario($email,$ps){
+        $resultado = null; //Devolvemos un objeto Usuario, si no se encuentra null
+       try {
+           $consulta = $this->conexion->prepare(
+               "select * from usuario where email = ? and clave = sha2(?,512)");
+           $params = array($email,$ps);
+           $consulta->execute($params);
+           if($fila=$consulta->fetch()){
+               //Creamos el usuario
+               $resultado = new Usuario($fila["id"], 
+                   $fila["email"], 
+                   $fila["nombre"], 
+                   $fila["direccion"], 
+                   $fila["telefono"], 
+                   $fila["perfil"], 
+                   $fila["baja"]);
+           }
+       } catch (PDOException $e) {
+           echo $e->getMessage();
+       }
+       return $resultado; 
     }
     public function  crearUsuario($email,$ps1,$nombre,$dir,$telf){
        $resultado = false;

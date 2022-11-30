@@ -2,38 +2,96 @@
 require_once 'AccesoDatos.php';
 //Conectar a la bd
 $bd = new AccesoDatos();
-if($bd->getConexion()!=null){
-    //Alta cliente
-    if(isset($_POST["alta"])){
-        //Chequear que los campos está rellenos
-        if(empty($_POST["email"]) or empty($_POST["ps1"]) or 
-            empty($_POST["ps2"]) or empty($_POST["nombre"]) or 
-            empty($_POST["dir"]) or empty($_POST["telf"])){
-            $mensaje = "Error, rellena todos los campos";
-        }
-        //Chequear que ps coinciden
-        elseif($_POST["ps1"]!=$_POST["ps2"]){
-            $mensaje = "Error, contraseña no coinciden";
-        }
-        else{
-            if($bd->existeUsuario($_POST["email"])){
-                $mensaje = "Error, ya está registro este email";
+$mensaje="";
+
+// Comprobar si se ha iniciado sesión
+session_start();
+if(isset($_SESSION["usuario"])){
+    $u = $_SESSION["usuario"];
+    if( $u->getPerfil() == 'A'){
+        //Si es admin, redirigir a getsionPlatos
+        header("location:gestionPlatos.php");
+    }
+    else{
+        //Si es cliente, redirigir a platos
+        header("location:platos.php");
+    }
+}
+
+function login(){
+    global $bd; //Usar $bd a nivel global
+    global $mensaje; //Usar $mensaje a nivel global
+    //Comprobar campos
+    if(empty($_POST["email"]) or empty($_POST["ps"])){
+        $mensaje = "Error, rellena todos los campos";        
+    }
+    else{
+        //llamamos al obtener usuario que devuelve un objeto de 
+        //la clase usuario
+        $u = $bd->obtenerUsuario($_POST["email"],$_POST["ps"]);
+        //Compruebo que exista y no esté dado de baja
+        if($u!=null and !$u->getBaja()){
+            //Login correcto
+            //Crear la variable de sesión para saber el usuario logueado            
+            $_SESSION["usuario"] = $u;            
+            if( $u->getPerfil() == 'A'){
+                //Si es admin, redirigir a getsionPlatos
+                header("location:gestionPlatos.php");
             }
             else{
-                //Registrar usuario
-                if($bd->crearUsuario($_POST["email"],$_POST["ps1"],
-                    $_POST["nombre"],$_POST["dir"],$_POST["telf"])){
-                   //Redirigir a Login
-                   header("location:login.php");
-                }
-                else{
-                    $mensaje = "Error al registrar el usuario";                    
-                }
-                
+                //Si es cliente, redirigir a platos
+                header("location:platos.php");
             }
+            
         }
-        
-        //Chequear que el email no esté creado ya
+        else{
+            $mensaje = "Error, el usuario no existe o está dado de baja";
+        }
+    }
+}
+
+function altaCliente(){
+    global $bd; //Usar $bd a nivel global
+    global $mensaje; //Usar $bd a nivel global
+    
+    //Chequear que los campos está rellenos
+    if(empty($_POST["email"]) or empty($_POST["ps1"]) or
+        empty($_POST["ps2"]) or empty($_POST["nombre"]) or
+        empty($_POST["dir"]) or empty($_POST["telf"])){
+            $mensaje = "Error, rellena todos los campos";
+    }
+    //Chequear que ps coinciden
+    elseif($_POST["ps1"]!=$_POST["ps2"]){
+        $mensaje = "Error, contraseña no coinciden";
+    }
+    else{
+        if($bd->existeUsuario($_POST["email"])){
+            $mensaje = "Error, ya está registro este email";
+        }
+        else{
+            //Registrar usuario
+            if($bd->crearUsuario($_POST["email"],$_POST["ps1"],
+                $_POST["nombre"],$_POST["dir"],$_POST["telf"])){
+                    //Redirigir a Login
+                    header("location:login.php");
+            }
+            else{
+                $mensaje = "Error al registrar el usuario";
+            }
+            
+        }
+    }
+
+}
+if($bd->getConexion()!=null){
+    //Login
+    if(isset($_POST["acceder"])){
+        login();
+    }
+    
+    //Alta cliente
+    if(isset($_POST["alta"])){
+       altaCliente(); 
     }
 ?>
 <!doctype html>

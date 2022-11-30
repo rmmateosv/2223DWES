@@ -8,6 +8,9 @@
     <script src="bootstrap-5.2.0-dist/js/bootstrap.bundle.min.js" ></script>
   </head>
   <body>
+  		<?php 
+  		include_once 'menu.php';
+  		?>
         <div class="container-fluid">
             <form method="post" enctype="multipart/form-data">
                 <h1>Gestión de Platos</h1>
