@@ -31,6 +31,27 @@ if(isset($_SESSION['usuario'])){
        //Conectar con la BD
        $bd = new AccesoDatos();
        if($bd->getConexion()!=null){
+           //Antes de cargar usuarios, comprobamos si se ha pulsado
+           //en alta o en baja
+           if(isset($_POST['baja'])){
+               //Dar de baja cliente (el id está en el value del botón baja)
+               if($bd->bajaCliente($_POST['baja'])){
+                   $mensaje = 'Cliente '.$_POST['baja'].' dado de baja';
+               }
+               else{
+                   $mensaje = 'Error al dar de baja el cliente '.$_POST['baja'];
+               }
+           }
+           if(isset($_POST['alta'])){
+               //Dar de alta cliente(el id está en el value del botón baja)
+               if($bd->altaCliente($_POST['alta'])){
+                   $mensaje = 'Cliente '.$_POST['alta'].' dado de alta';
+               }
+               else{
+                   $mensaje = 'Error al dar de alta el cliente '.$_POST['alta'];
+               }
+           }
+           
            //Obtenemos los usuarios
            $usuarios = $bd->obtenerClientes();
        }//Hay conexión
@@ -87,13 +108,13 @@ if(isset($_SESSION['usuario'])){
                             foreach ($usuarios as $u){                                
                             ?><!--for each de usuarios  -->
                             <tr>
-                                <td><?php $u->getId()?></td>
-                                <td><?php $u->getEmail()?></td>
-                                <td><?php $u->getNombre()?></td>
-                                <td><?php $u->getDir()?></td>
-                                <td><?php $u->getTelf()?></td>
-                                <td><?php $u->getPerfil()?></td>
-                                <td><?php $u->getBaja()?></td>
+                                <td><?php echo $u->getId()?></td>
+                                <td><?php echo $u->getEmail()?></td>
+                                <td><?php echo $u->getNombre()?></td>
+                                <td><?php echo $u->getDir()?></td>
+                                <td><?php echo $u->getTelf()?></td>
+                                <td><?php echo $u->getPerfil()?></td>
+                                <td><?php echo $u->getBaja()?></td>
                                 <td>
                                 <?php pintarBotonAltaBaja($u)?>
                                 </td>

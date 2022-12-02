@@ -18,6 +18,33 @@ class AccesoDatos{
         
     }
     
+    public function altaCliente($id){
+        $resultado = false;
+        try {
+            $consulta = $this->conexion->prepare(
+                "update usuario set baja=false where id = ?");
+            $params = array($id);
+            $resultado = $consulta->execute($params);
+            
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
+    
+    public function bajaCliente($id){
+        $resultado = false;
+        try {
+           $consulta = $this->conexion->prepare(
+               "update usuario set baja=true where id = ?");
+           $params = array($id);
+           $resultado = $consulta->execute($params);
+            
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
     public function obtenerClientes(){
         $resultado = array();
         try {
