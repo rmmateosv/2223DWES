@@ -1,9 +1,16 @@
 <?php 
 require_once 'Usuario.php';
-session_start();
 //Recuperar el usuario logueado
 if(isset($_SESSION["usuario"])){
     $u=$_SESSION["usuario"];
+    
+    //Programar botón salir
+    if(isset($_POST['salir'])){
+        //Cerramos sesión
+        session_unset();
+        //Redirigimos a login
+        header('location:login.php');
+    }
 ?>
 <nav class="navbar navbar-expand-sm bg-light navbar-light">
 	<div class="container-fluid">

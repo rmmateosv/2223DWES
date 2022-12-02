@@ -1,3 +1,44 @@
+<?php 
+require_once 'Usuario.php';
+require_once 'AccesoDatos.php';
+
+//Definir funciones
+function pintarBotonAltaBaja(Usuario $u){
+    if($u->getBaja()){
+        //Creamos un botón azul para volver a dar de alta
+       echo '<button class="btn btn-primary" 
+                                type="submit" name="alta" 
+                                value="'.$u->getId().'">
+                                Alta</button>'; 
+    }
+    else{
+        //Creamos un botón rojo para dar baja
+        echo '<button class="btn btn-danger" 
+                                type="submit" name="baja"
+                                value="'.$u->getId().'">
+                                Baja</button>';
+    }
+}
+//Iniciar Sessión para comprobar si estamos autenticados como admin
+session_start();
+if(isset($_SESSION['usuario'])){
+    $u = $_SESSION['usuario'];
+    if($u->getPerfil()!='A'){
+        //Redirigir a login
+        header('location:login.php');
+    }
+    else{ //Usuario y perfil correcto
+       //Conectar con la BD
+       $bd = new AccesoDatos();
+       if($bd->getConexion()!=null){
+           //Obtenemos los usuarios
+           $usuarios = $bd->obtenerClientes();
+       }//Hay conexión
+       else{
+           $mensaje = "Error, no hay conexión con la bd";
+       }
+?>
+
 <!doctype html>
 <html>
   <head>
@@ -8,11 +49,18 @@
     <script src="bootstrap-5.2.0-dist/js/bootstrap.bundle.min.js" ></script>
   </head>
   <body>
+  		<?php 
+  		//Cargar menú
+  		include_once 'menu.php';
+  		?>
         <div class="container-fluid">
             <form method="post">
                 <h1>Gestión de Usuarios</h1>
-                <h3 class="text-primary">MENSAJES</h3>
-                <br/>
+                <h3 class="text-primary">
+                <?php if(isset($mensaje)){
+                    echo $mensaje;
+                }?></h3>
+                <br/>                
             	<hr />
                 <div
                   class="table-editor"
@@ -33,6 +81,27 @@
                               </tr>
                         </thead>
                         <tbody>
+                        <!-- PINTAR UNA FILA PARA CADA CLIENTE -->
+                        <?php 
+                        if(sizeof($usuarios)>0){
+                            foreach ($usuarios as $u){                                
+                            ?><!--for each de usuarios  -->
+                            <tr>
+                                <td><?php $u->getId()?></td>
+                                <td><?php $u->getEmail()?></td>
+                                <td><?php $u->getNombre()?></td>
+                                <td><?php $u->getDir()?></td>
+                                <td><?php $u->getTelf()?></td>
+                                <td><?php $u->getPerfil()?></td>
+                                <td><?php $u->getBaja()?></td>
+                                <td>
+                                <?php pintarBotonAltaBaja($u)?>
+                                </td>
+                              </tr>
+                            <?php     
+                            }
+                        }
+                        ?>
                         </tbody>
                   </table>
                 </div>
@@ -40,3 +109,12 @@
         </div>    
   </body>
 </html>
+<?php         
+    }//Usuario y perfil correcto
+    
+}
+else{
+    //Redirigir a login
+    header('location:login.php');
+}
+?>

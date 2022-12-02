@@ -17,6 +17,28 @@ class AccesoDatos{
         }
         
     }
+    
+    public function obtenerClientes(){
+        $resultado = array();
+        try {
+            $consulta = $this->conexion->query(
+                "select * from usuario where perfil = 'C'");
+            while ($fila=$consulta->fetch()) {
+                $u = new Usuario($fila["id"], 
+                    $fila["email"],
+                    $fila["nombre"],
+                    $fila["direccion"],
+                    $fila["telefono"],
+                    $fila["perfil"],
+                    $fila["baja"]);
+                //Añado cliente a resultado
+                $resultado[]=$u;
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
     public function obtenerUsuario($email,$ps){
         $resultado = null; //Devolvemos un objeto Usuario, si no se encuentra null
        try {
