@@ -2,20 +2,52 @@
 require_once 'Usuario.php';
 require_once 'AccesoDatos.php';
 
+function pintarPlatos(){
+    global $platos;
+    if(isset($platos)){
+        foreach ($platos as $p){
+            echo "<tr>
+            <td>".$p->getId()."</td>
+            <td>".$p->getNombre()."</td>
+            <td>".$p->getTipo()."</td>
+            <td>".$p->getPrecio()."</td>
+            <td><img src='".$p->getFoto()."' width='50px' height='50px'/></td>
+            <td>".$p->getBaja()."</td>
+            <td>
+                <button type='submit' class='btn btn-primary' name='modificar'>Modificar</button>
+                <button type='submit' class='btn btn-danger' name='baja'>Baja</button>
+            </td>
+         </tr>";
+        }
+    }
+}
+
+function rellenarInput($campo){
+    if(isset($_POST[$campo]) and !empty($_POST[$campo])){
+        return  $_POST[$campo];
+    }
+}
+function rellenarOption($campo,$valor){
+    if(isset($_POST[$campo]) and $_POST[$campo]==$valor){
+        return "selected='selected'";
+    }
+}
 function pintarFilaAltaPlato() {
-    ¡¡¡RECORDAR DATOS!!!
+   
     echo "<tr>
             <td></td>
-            <td><input type='text' name='nombre' placeholder='Nombre Plato'/></td>
+            <td><input type='text' name='nombre' value='"
+            .rellenarInput("nombre")."' placeholder='Nombre Plato'/></td>
             <td>
             <select name='tipo'>
-                <option>Entrante</option>
-                <option>Principal</option>
-                <option>Bebida</option>
-                <option>Postre</option>
+                <option ".rellenarOption("tipo","Entrante").">Entrante</option>
+                <option ".rellenarOption("tipo","Principal").">Principal</option>
+                <option ".rellenarOption("tipo","Bebida").">Bebida</option>
+                <option ".rellenarOption("tipo","Postre").">Postre</option>
             <select>
             </td>
-            <td><input type='number' name='precio' placeholder='0,00' step='0.01'/></td>
+            <td><input type='number' name='precio' value='"
+            .rellenarInput("precio")."'placeholder='0,00' step='0.01'/></td>
             <td><input type='file' name='foto'/></td>
             <td></td>
             <td>
@@ -41,10 +73,32 @@ if(isset($_SESSION['usuario'])){
             if(isset($_POST['crear'])){
                 //Chequear que estén rellenos todos los campos
                 if(empty($_POST['nombre']) or empty($_POST['precio'])
-                    or !isset($_POST['foto'])){
+                    or empty($_FILES['foto']['name'])){
                     $mensaje = "Error, debe rellenar nombre, precio y foto";
                 }
+                else{
+                    //Nombre de fichero va a ser la fecha
+                    $fichero = "fotosPlatos/".date("dmYHis");
+                    $p = new  Plato(null, $_POST['nombre'], 
+                        $_POST['tipo'], $_POST['precio'], $fichero, false);
+                    //Hacemos el insert en la bd
+                    if($bd->crearPlato($p)){
+                        //Subimos fichero
+                        if(!move_uploaded_file($_FILES['foto']['tmp_name'], $fichero)){
+                            $mensaje = "Error al subir la foto del plato";     
+                        }
+                        else{
+                            header("location:gestionPlatos.php");
+                        }
+                    }
+                    else{
+                        $mensaje = "Error al crear el plato";                        
+                    }
+                    
+                }
             }
+            // Obtener los platos que existen en la bd
+            $platos = $bd->ObtenerPlatos();
         }//Hay conexión
         else{
             $mensaje = "Error, no hay conexión con la bd";
@@ -66,9 +120,11 @@ if(isset($_SESSION['usuario'])){
         <div class="container-fluid">
             <form method="post" enctype="multipart/form-data">
                 <h1>Gestión de Platos</h1>
-                <h3 class="text-primary"><?php if(isset($mensaje)){
+                <h3 class="text-primary">
+                <?php if(isset($mensaje)){
                     echo $mensaje;
-                }?></h3>
+                }?>
+                </h3>
                 <br/>
                 <div class="d-flex justify-content-end mb-4">
                   <button name="alta" class="btn btn-primary btn-sm ms-3" data-mdb-add-entry data-mdb-target="#table_1">
@@ -101,6 +157,7 @@ if(isset($_SESSION['usuario'])){
                   	if(isset($_POST['alta']) or isset($_POST['crear'])){
                   	    pintarFilaAltaPlato();
                   	}
+                  	pintarPlatos();
                   	?>
                     </tbody>
                   </table>

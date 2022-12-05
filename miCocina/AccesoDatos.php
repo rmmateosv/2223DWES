@@ -1,5 +1,6 @@
 <?php
 require_once 'Usuario.php';
+require_once 'Plato.php';
 
 class AccesoDatos{
     private $conexion = null;
@@ -18,6 +19,34 @@ class AccesoDatos{
         
     }
     
+    public function ObtenerPlatos(){
+        $resultado = array();
+        try {
+            $consulta = $this->conexion->query("select * from plato");
+            while($fila=$consulta->fetch()){
+                $p = new Plato($fila["id"], $fila["nombre"], 
+                    $fila["tipo"], $fila["precio"], $fila["foto"], $fila["baja"]);
+                $resultado[]=$p;
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
+    public function crearPlato(Plato $p){
+        $resultado = false;
+        try {
+            $consulta = $this->conexion->prepare(
+                "insert into plato values (null,?,?,?,?,false)");
+            $params = array($p->getNombre(),$p->getTipo(),
+                $p->getPrecio(), $p->getFoto());
+            return $consulta->execute($params);
+            
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }        
+        return  $resultado;
+    }
     public function altaCliente($id){
         $resultado = false;
         try {
