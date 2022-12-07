@@ -5,19 +5,49 @@ require_once 'AccesoDatos.php';
 function pintarPlatos(){
     global $platos;
     if(isset($platos)){
-        foreach ($platos as $p){
-            echo "<tr>
-            <td>".$p->getId()."</td>
-            <td>".$p->getNombre()."</td>
-            <td>".$p->getTipo()."</td>
-            <td>".$p->getPrecio()."</td>
-            <td><img src='".$p->getFoto()."' width='50px' height='50px'/></td>
-            <td>".$p->getBaja()."</td>
-            <td>
-                <button type='submit' class='btn btn-primary' name='modificar'>Modificar</button>
-                <button type='submit' class='btn btn-danger' name='baja'>Baja</button>
-            </td>
-         </tr>";
+        foreach ($platos as $p){            
+            //Detectar si se ha pulsado en modificar
+            if(isset($_POST["modificar"]) and $_POST["modificar"]==$p->getId()){
+                // Pintar plato con campos editables
+                echo "<tr>
+                <td>".$p->getId()."</td>
+                <td><input type='text' name='nombre' value='".$p->getNombre()."'/></td>
+                <td><select name = 'tipo'>
+                    <option ".($p->getTipo()=='Entrante'?'selected=selected':'').">Entrante</option>
+                    <option ".($p->getTipo()=='Principal'?'selected=selected':'').">Principal</option>
+                    <option ".($p->getTipo()=='Bebida'?'selected=selected':'').">Bebida</option>
+                    <option ".($p->getTipo()=='Postre'?'selected=selected':'').">Postre</option>
+                    </select></td>
+                <td><input type='number' step='0.01' name='precio' value='".$p->getPrecio()."'/></td>
+                <td><input type='file' name='foto'/></td>
+                <td><input type='checkbox' name='checkBaja' ".($p->getBaja()?'checked=checked':'')."/></td>
+                <td>
+                    <button type='submit' class='btn btn-primary' name='guardar' value='".$p->getId()."'>Guardar</button>
+                    <button type='submit' class='btn btn-danger' name='cancelar' value='".$p->getId()."'>Cancelar</button>";                              
+                echo "</td>
+                </tr>";
+            }
+            else{
+                echo "<tr>
+                <td>".$p->getId()."</td>
+                <td>".$p->getNombre()."</td>
+                <td>".$p->getTipo()."</td>
+                <td>".$p->getPrecio()."</td>
+                <td><img src='".$p->getFoto()."' width='50px' height='50px'/></td>
+                <td>".$p->getBaja()."</td>
+                <td>
+                    <button type='submit' class='btn btn-primary' name='modificar' value='".$p->getId()."'>Modificar</button>
+                    ";
+                if($p->getBaja()){
+                    echo "<button type='submit' class='btn btn-primary' name='baja' value='".$p->getId()."'>Alta</button>";
+                }
+                else{
+                    echo "<button type='submit' class='btn btn-danger' name='baja' value='".$p->getId()."'>Baja</button>";
+                }
+                
+                echo "</td>
+                </tr>";
+            }//Else de modificar
         }
     }
 }
@@ -69,6 +99,54 @@ if(isset($_SESSION['usuario'])){
         //Conectar con la BD
         $bd = new AccesoDatos();
         if($bd->getConexion()!=null){
+            //Detectar si se ha pulsado en guardar (antes se pulsa en modificar)
+            if(isset($_POST["guardar"])){
+                //Comprobar que no está vacío nombre, precio
+                if(empty($_POST['nombre']) or empty($_POST['precio'])){
+                    $mensaje = "Error, el nombre y el precio no pueden estar vacíos";
+                }
+                else{
+                    //Chequear si se ha cambiado la foto
+                    if(!empty($_FILES['foto']['name'])){
+                        //Se ha cambiado, subir foto
+                        //Nombre de fichero va a ser la fecha
+                        $fichero = "fotosPlatos/".date("dmYHis");
+                        if(!move_uploaded_file($_FILES['foto']['tmp_name'], $fichero)){
+                            $mensaje = "Error al subir la foto del plato";
+                        }
+                    }
+                    else{
+                        //No se ha cambiado
+                        $fichero = null;
+                    }
+                    $pNuevo = new Plato($_POST['guardar'], 
+                        $_POST['nombre'], 
+                        $_POST['tipo'], 
+                        $_POST['precio'], 
+                        $fichero,
+                        (isset($_POST['checkBaja'])?true:false));
+                    if(!$bd->modificarPlato($pNuevo)){
+                      $mensaje = 'Error al modificar el plato';                     
+                    }
+                }
+            }//if guardar cambios modificación
+            //Comprobar si hay que dar de baja plato
+            if(isset($_POST['baja'])){
+                $p = $bd->ObtenerPlato($_POST['baja']);
+                if($p->getBaja()){
+                    //Dar de alta
+                    if(!$bd->modificarBaja($p, false)){
+                        $mensaje = "Se ha producido un error al dar de alta el plato";
+                    }
+                }
+                else{
+                    //Dar de baja
+                    if(!$bd->modificarBaja($p,true)){
+                        $mensaje = "Se ha producido un error al dar de baja el plato";
+                    }
+                }
+            }// If modificar plato
+            
             //Comprobar si hay que crear plato
             if(isset($_POST['crear'])){
                 //Chequear que estén rellenos todos los campos
@@ -143,7 +221,7 @@ if(isset($_SESSION['usuario'])){
                         <th class="th-sm" ><p class='text-start'>Id</th>
                         <th class="th-sm" data-mdb-sort="false"><p class='text-start'>Nombre</p></th>
                         <th class="th-sm" data-mdb-sort="false"><p class='text-start'>Tipo</p></th>
-                        <th class="th-sm" data-mdb-sort="false"><p class='text-end'>Precio</p></th>
+                        <th class="th-sm" data-mdb-sort="false"><p class='text-start'>Precio</p></th>
                         <th class="th-sm" data-mdb-sort="false"><p class='text-start'>Foto</p></th>
                         <th class="th-sm" data-mdb-sort="false"><p class='text-start'>Baja</p></th>
                         <th class="th-sm" data-mdb-sort="false"><p class='text-start'>Acciones</p></th>

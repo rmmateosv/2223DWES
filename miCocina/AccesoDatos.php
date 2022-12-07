@@ -19,6 +19,62 @@ class AccesoDatos{
         
     }
     
+    public function modificarPlato(Plato $pNuevo){
+       $resultado = false;
+       try {
+           if($pNuevo->getFoto()==null){
+               $consulta = $this->conexion->prepare(
+                   "update plato set nombre=?, tipo=?, precio=?,baja=? 
+                    where id = ?");
+               $params=array($pNuevo->getNombre(),$pNuevo->getTipo(),
+                   $pNuevo->getPrecio(),$pNuevo->getBaja(),$pNuevo->getId());
+              
+           }
+           else{
+               $consulta = $this->conexion->prepare(
+                   "update plato set nombre=?, tipo=?, precio=?,baja=?, foto=?
+                    where id = ?");
+               $params=array($pNuevo->getNombre(),$pNuevo->getTipo(),
+                   $pNuevo->getPrecio(),$pNuevo->getBaja(),$pNuevo->getFoto(),
+                   $pNuevo->getId());
+           }
+           return $consulta->execute($params);
+       } catch (Exception $e) {
+           echo $e->getMessage();
+       }
+       return $resultado;
+    }
+    public function ObtenerPlato($id){
+        $resultado = null;
+        try {
+            $consulta = $this->conexion->prepare(
+                "select * from plato where id = ?");
+            $params = array($id);
+            $consulta->execute($params);
+            if($fila=$consulta->fetch()){                
+                $resultado = new Plato($fila["id"], 
+                    $fila["nombre"],
+                    $fila["tipo"], $fila["precio"], $fila["foto"], 
+                    $fila["baja"]);
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
+    public function modificarBaja(Plato $p, $baja){
+        $resultado = false;
+        try {
+            $consulta = $this->conexion->prepare(
+                "update plato set baja = ? where id = ?");
+            $params = array($baja,$p->getId());
+            return $consulta->execute($params);
+        } catch (PDOException $e) {
+            
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
     public function ObtenerPlatos(){
         $resultado = array();
         try {
