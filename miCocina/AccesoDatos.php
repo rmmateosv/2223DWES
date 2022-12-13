@@ -19,6 +19,32 @@ class AccesoDatos{
         
     }
     
+    public function ObtenerPlatosCliente($tipo){
+        $resultado = array();
+        try {
+            if($tipo=='Todos'){
+                $consulta = $this->conexion->query(
+                    "select * from plato where baja = false");
+                
+            }
+            else{
+                $consulta = $this->conexion->prepare(
+                    "select * from plato where baja = false and tipo = ?");
+                $params=array($tipo);
+                $consulta->execute($params);
+            }
+            //Recuperar platos
+            while($fila=$consulta->fetch()){
+                $p=new Plato($fila['id'], $fila['nombre'], 
+                    $fila['tipo'], $fila['precio'], $fila['foto'], $fila['baja']);
+                $resultado[]=$p;
+            }
+        } catch (PDOException $e) {
+            
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
     public function modificarPlato(Plato $pNuevo){
        $resultado = false;
        try {
