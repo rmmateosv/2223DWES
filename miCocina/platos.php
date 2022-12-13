@@ -2,6 +2,7 @@
 require_once 'Usuario.php';
 require_once 'AccesoDatos.php';
 require_once 'Plato.php';
+require_once 'PlatoCarrito.php';
 
 function recordar($campo,$valor) {
     if(isset($_POST[$campo])){
@@ -67,7 +68,37 @@ else{
     	if($bd->getConexion()==null){
     	    $mensaje='Error, no hay conexión con la base de datos';
     	}
-    	else{   
+    	else{
+    	    //Añadir a carrito
+    	    if(isset($_POST['carrito'])){
+    	        //Obtener el plato
+    	        $p = $bd->ObtenerPlato($_POST['carrito']);
+    	        //Chequear que existe y que no está de baja
+    	        if($p!=null and !$p->getBaja()){    	           
+    	            //Chequear si existe el carrito
+    	            $encontrado = false;
+    	            if(isset($_SESSION['carrito'])){
+    	                //Comprobar si ya está el producto en el carrito
+    	                $carrito = $_SESSION['carrito'];    	                
+    	                foreach ($carrito as $platoC){
+    	                    if($platoC->getPlato()->getId()==$p->getId()){
+    	                        //Ya está el producto en el carrito
+    	                        $platoC->setCantidad($platoC->getCantidad()+1);
+    	                        $encontrado=true;
+    	                    }    	                    
+    	                }     	                
+    	            } //if YA hay algo en el carrito    	            
+    	            if(!$encontrado){
+    	                //Añadimos plato a carrito
+    	                $platoC = new PlatoCarrito($p, 1);
+    	                $carrito[]=$platoC;
+    	            }
+    	            $_SESSION['carrito'] = $carrito;
+    	        }
+    	        else{
+    	            $mensaje = "Error, el plato no existe o está de baja";
+    	        }
+    	    }
     	    //Obtener los platos
     	    if(isset($_POST['tipos'])){
     	       $platos=$bd->ObtenerPlatosCliente($_POST['tipos']);

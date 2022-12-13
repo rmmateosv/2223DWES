@@ -1,5 +1,14 @@
 <?php 
 require_once 'Usuario.php';
+
+function resumenCarrito() {
+    $carrito=$_SESSION['carrito'];
+    $total=0;
+    foreach ($carrito as $pC){
+        $total+=$pC->getCantidad();
+    }
+    return sizeof($carrito).'/'.$total;
+}
 //Recuperar el usuario logueado
 if(isset($_SESSION["usuario"])){
     $u=$_SESSION["usuario"];
@@ -35,7 +44,7 @@ if(isset($_SESSION["usuario"])){
 			<li class="nav-item"><a class="nav-link" href="pedidos.php">Pedidos</a>
 			</li>
 			<li class="nav-item"><a class="nav-link" href="carrito.php">Carrito
-					Nº</a></li>
+					<?php if(isset($_SESSION['carrito'])) echo resumenCarrito()?></a></li>
 			<?php
 			} //elseif usuario cliente
 			?>
