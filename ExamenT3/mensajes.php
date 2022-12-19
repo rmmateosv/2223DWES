@@ -2,7 +2,7 @@
 require_once 'AccesoDatos.php';
 require_once 'Empleado.php';
 require_once 'Departamento.php';
-
+require_once 'Mensaje.php';
 session_start();
 if(!isset($_SESSION['empleado'])){
     header('location:login.php');
@@ -38,6 +38,9 @@ else{
             }
         }
     }
+    //Obtener enviados
+    $enviados = $bd->obtenerEnviados($empleado);
+    $recibidos = $bd->obtenerRecibidos($empleado);
 ?>
 <!doctype html>
 <html>
@@ -56,7 +59,7 @@ else{
             		<?php
             		echo "Empleado:".$empleado->getNombre()
             		." - DNI:".$empleado->getDni()."- Departamento:"
-                    .$empleado->getDepartamento();
+                    .$empleado->getDepartamento()->getNombre();
             		?>
             		</h2>             		
             		<hr/> 
@@ -93,6 +96,18 @@ else{
             				<th align="left">Asunto</th>
             				<th align="left">Mensaje</th>
             			</tr>
+            			<?php
+            			foreach ($recibidos as $r){
+            			   echo "<tr>
+            				<td>".$r->getIdMen()."</td>
+                            <td>".$r->getDeEmpleado()->getNombre()."</td>
+            				<td>".$r->getParaDepartamento()->getNombre()."</td>            				
+            				<td>".date("d/m/Y",strtotime($r->getFechaEnvio()))."</td>
+            				<td>".$r->getAsunto()."</td>
+            				<td>".$r->getMensaje()."</td>
+            			</tr>"; 
+            			}
+            			?>
             		</table>
             		<h1 style="color:blue;">Bandeja de Salida</h1> 
             		<hr/>   
@@ -104,6 +119,17 @@ else{
             				<th align="left">Asunto</th>
             				<th align="left">Mensaje</th>
             			</tr>
+            			<?php
+            			foreach ($enviados as $e){
+            			   echo "<tr>
+            				<td>".$e->getIdMen()."</td>
+            				<td>".$e->getParaDepartamento()->getNombre()."</td>            				
+            				<td>".date("d/m/Y",strtotime($e->getFechaEnvio()))."</td>
+            				<td>".$e->getAsunto()."</td>
+            				<td>".$e->getMensaje()."</td>
+            			</tr>"; 
+            			}
+            			?>
             		</table>                              
       		</form>     
 		      

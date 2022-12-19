@@ -16,6 +16,55 @@ class AccesoDatos
         
         
     }
+    public function obtenerRecibidos(Empleado $emp) {
+        $resultado = array();
+        try {
+            $consulta = $this->conexion->prepare(
+                "select * from mensaje as m inner join departamento as d
+                    on m.paraDepartamento = d.idDep
+                    inner join para as p on p.idMen = m.idMen 
+                    inner join empleado as e on e.idEmp = p.paraEmpleado    
+                    where paraEmpleado = ? order by fechaEnvio desc");
+            $params=array($emp->getIdEmp());
+            $consulta->execute($params);
+            while($fila=$consulta->fetch()){
+                $resultado[] = new  Mensaje($fila['idMen'],
+                    new Empleado($fila['idEmp'], $fila['dni'], $fila['nombreEmp'], 
+                        $fila['fechaNac'], $fila['departamento'], $fila['cambiarPs']),
+                    new Departamento($fila['idDep'], $fila['nombre']),
+                    $fila['asunto'],
+                    $fila['fechaEnvio'],
+                    $fila['mensaje']);
+            }
+            
+        } catch (Exception $e) {
+            echo  $e->getMessage();
+        }
+        return $resultado;
+    }
+    public function obtenerEnviados(Empleado $emp) {
+        $resultado = array();
+        try {
+            $consulta = $this->conexion->prepare(
+                "select * from mensaje inner join departamento 
+                    on paraDepartamento = idDep
+                    where deEmpleado = ? order by fechaEnvio desc");
+            $params=array($emp->getIdEmp());
+            $consulta->execute($params);
+            while($fila=$consulta->fetch()){
+                $resultado[] = new  Mensaje($fila['idMen'], 
+                    $fila['deEmpleado'], 
+                    new Departamento($fila['idDep'], $fila['nombre']), 
+                    $fila['asunto'], 
+                    $fila['fechaEnvio'], 
+                    $fila['mensaje']);
+            }
+            
+        } catch (Exception $e) {
+            echo  $e->getMessage();
+        }
+        return $resultado;
+    }
     public function enviarMensaje($de,$para,$asunto,$mensaje,$emples){
         $resultado = false;
         try {
@@ -86,14 +135,16 @@ class AccesoDatos
         $resultado = null;
         try {
            $consulta = $this->conexion->prepare(
-               "select * from empleado where idEmp=? and ps = sha2(?,0)");
+               "select * from empleado inner join departamento 
+                        on departamento = idDep 
+                        where idEmp=? and ps = sha2(?,0)");
            $params = array($emp, $ps);
            $ok=$consulta->execute($params);
            if($ok){
                if($fila=$consulta->fetch()){
                    $resultado = new Empleado($fila[0], 
                        $fila['dni'], $fila['nombreEmp'], 
-                       $fila['fechaNac'], $fila['departamento'], $fila['cambiarPs']);
+                       $fila['fechaNac'], new Departamento($fila['idDep'], $fila['nombre']), $fila['cambiarPs']);
                }
                
            }

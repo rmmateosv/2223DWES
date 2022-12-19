@@ -1,6 +1,7 @@
 <?php 
 require_once 'AccesoDatos.php';
 require_once 'Empleado.php';
+require_once 'Departamento.php';
 //Loguearse
 if(isset($_POST['acceder'])){
     //Comprobar us y ps
