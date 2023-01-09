@@ -16,6 +16,33 @@ class AccesoDatos
         
         
     }
+    function obtenerNumMensajes($emp,&$numE,&$numR){
+        try {
+            $consulta = $this->conexion->prepare("call obtenerNumMensajes(?)" );    
+            $params=array($emp);
+            $consulta->execute($params);
+            if($fila=$consulta->fetch()){
+                $numE=$fila['numE'];
+                $numR=$fila['numR'];
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+    function login($us,$ps) {
+        $resultado = 0;
+        try {
+            $consulta = $this->conexion->prepare("select login(?,?)");
+            $params=array($us,$ps);
+            $consulta->execute($params);
+            if($fila=$consulta->fetch()){
+              $resultado=$fila[0];
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
     public function obtenerRecibidos(Empleado $emp) {
         $resultado = array();
         try {

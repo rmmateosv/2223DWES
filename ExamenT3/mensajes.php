@@ -4,6 +4,8 @@ require_once 'Empleado.php';
 require_once 'Departamento.php';
 require_once 'Mensaje.php';
 session_start();
+$numR=0; 
+$numE=0;
 if(!isset($_SESSION['empleado'])){
     header('location:login.php');
 }
@@ -21,6 +23,9 @@ if($bd->getConexion()==null){
 }
 else{
     $dep = $bd->obtenerDptos();
+    
+    //Otener nº de mensajes enviados y recibidos
+    $bd->obtenerNumMensajes($empleado->getIdEmp(),$numE,$numR);
     
     if(isset($_POST['Enviar'])){
         if(empty($_POST['asunto']) or empty($_POST['mensaje'])){
@@ -59,7 +64,8 @@ else{
             		<?php
             		echo "Empleado:".$empleado->getNombre()
             		." - DNI:".$empleado->getDni()."- Departamento:"
-                    .$empleado->getDepartamento()->getNombre();
+                    .$empleado->getDepartamento()->getNombre().
+            		" Recibidos: $numR Enviados:$numE";
             		?>
             		</h2>             		
             		<hr/> 
