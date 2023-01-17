@@ -17,6 +17,9 @@ return new class extends Migration
             //
             //Creamos campo color que admite nulos
             $table->string("color")->nullable(true);
+            $table->foreignId("propietario_id")
+            ->constrained()->onUpdate('cascade')
+            ->onDelete('restrict');
         });
     }
 
