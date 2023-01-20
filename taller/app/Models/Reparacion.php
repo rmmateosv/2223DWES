@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Reparacion extends Model
 {
     use HasFactory;
+    //Este modelo espera que la tabla se llame reparacions,
+    //pero nuestra tabla se llama reparaciones
+    protected $table = "reparaciones";
 }

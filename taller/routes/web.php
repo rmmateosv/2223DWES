@@ -23,15 +23,18 @@ Route::controller(CocheControler::class)->group(
     function(){
         Route::get('/coches', "verCoches")->name('verCoches');
         Route::get('/coches/crear', "crearCoche")-> name('crearCoche');
+        //Esta ruta recoge los datos del formulario de crear coche y los
+        //envia por post a la función insertarCoche del controlador
+        Route::post('/coches/crear', "insertarCoche")->name('insertarCoche');
         //Ruta con dos parámetros, el segundo es opcional
         //Para decir que es opcional ponemos una ? en la ruta
         // y en la función hay que dar un valor por defecto, en este caso null
         Route::get('/coches/{matricula}/{dni?}',"verCoche")->name('verCoche');
-
-            }
+        
+    }
+        
 );
 
 
-Auth::routes();
-
+//Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

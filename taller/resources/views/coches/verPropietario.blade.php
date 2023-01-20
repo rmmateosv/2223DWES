@@ -3,8 +3,20 @@
 @section('titulo',"PÁGINA PARA VER EL PROPIETARIO DE UN COCHE")
 
 @section('contenido')
-    <h1>En esta página vamos a </h1>
-    <h2>ver los datos de {{$dni}} prietario del vehículo {{$matricula}}</h2>
+    <table class="table table-striped">
+        <tr>
+            <td>Id</td>
+            <td>Nombre</td>
+            <td>Teléfono</td>
+            <td>Email</td>
+        </tr>
+        <tr>
+            <td>{{$propietario->id}}</td>
+            <td>{{$propietario->nombre}}</td>
+            <td>{{$propietario->telefono}}</td>
+            <td>{{$propietario->email}}</td>
+        </tr>
+    </table>
 @endsection
 
 @section('mensaje',"")
