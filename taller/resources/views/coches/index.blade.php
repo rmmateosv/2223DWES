@@ -26,7 +26,7 @@
         <td>{{$c->propietario_id}}</td>
         <td>
             <a href="{{route('verCoche',$c->matricula)}}" class="btn btn-info btn-sm">Detalle</a>
-            <a href="" class="btn btn-warning btn-sm">Modificar</a>
+            <a href="{{route('modificarCoche',$c->id)}}" class="btn btn-warning btn-sm">Modificar</a>
             <a href="" class="btn btn-danger btn-sm">Borrar</a>
         </td>
     </tr>        

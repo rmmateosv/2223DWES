@@ -1,16 +1,22 @@
 @extends('plantilla')
 
-@section('titulo',"PÁGINA PARA CREAR UN COCHE")
+@section('titulo',"PÁGINA PARA MODIFICAR UN COCHE")
 
 @section('contenido')
-    <form action="{{route("insertarCoche")}}" method="post">
+    <form action="{{route("updateCoche")}}" method="post">
         @csrf {{-- Para evitar ataques--}}
+        @method('PUT')
         <br/>
+        <p>
+            <label for="id">Id</label><br/>
+            <input name="id" id="id" disabled='disabled' value={{$coche->id}}/>  
+            '''CAMBIAR Y PONER EN ROUTE'                    
+        </p>
         <p>
             <label for="propietario">Selecciona Propietario</label><br/>
             <select name="propietario" id="propietario">
                 @foreach ($propietarios as $p)
-                @if (old('propietario')==$p->id)
+                @if ($coche->propietario_id==$p->id)
                     <option value="{{$p->id}}" selected='selected'>{{$p->nombre}}</option>
                 @else
                     <option value="{{$p->id}}">{{$p->nombre}}</option>
@@ -27,7 +33,7 @@
         <p>
             <label for="matricula">Matricúla</label><br/>
             <input name="matricula" id="matricula" placeholder="1111AAA" 
-            value="{{old('matricula')}}"/> 
+            value="{{$coche->matricula}}"/> 
             @error('matricula')
                 <div class="alert alert-danger">
                     Matrícula obligatoria y longitud entre 7 y 10
@@ -36,7 +42,7 @@
         </p>
         <p>
             <label for="color">Color</label><br/>
-            <input name="color" id="color" value="{{old('color')}}"/>
+            <input name="color" id="color" value="{{$coche->color}}"/>
             @error('color')
                 <div class="alert alert-danger">
                    Rellena color
@@ -44,7 +50,7 @@
             @enderror             
         </p>
         <p>            
-            <input class = "btn btn-primary" type="submit" name="crear" value="Crear"/>             
+            <input class = "btn btn-primary" type="submit" name="modificar" value="Modificar"/>             
         </p>
         
     </form>
