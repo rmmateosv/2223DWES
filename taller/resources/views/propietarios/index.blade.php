@@ -1,39 +1,38 @@
 @extends('plantilla')
 
-@section('titulo',"PÁGINA PARA VER LOS COCHES")
+@section('titulo',"PÁGINA PARA VER LOS PROPIETARIOS")
 
 @section('contenido')
 <div>
     <br/>
     <div>
-        <a href="{{route("crearCoche")}}" class="btn btn-success btn-sm">Nuevo</a>
+        <a href="{{route("crearPropietario")}}" class="btn btn-success btn-sm">Nuevo</a>
     </div>
     <br/>
     <table class="table table-striped">
         <tr>
             <th>Id</th>
-            <th>Matrícula</th>
-            <th>Color</th>
-            <th>Propietario</th>
-            <th>Acciones</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
         </tr>
     {{-- Mostrar los datos del array misCoches que nos pasa el controlador --}}
-    @foreach ($misCoches as $c)
+    @foreach ($propietarios as $p)
     <tr>
-        <td>{{$c->id}}</td>
-        <td>{{$c->matricula}}</td>
-        <td>{{$c->color}}</td>
-        <td>{{$c->propietario_id}}</td>
+        <td>{{$p->id}}</td>
+        <td>{{$p->nombre}}</td>
+        <td>{{$p->email}}</td>
+        <td>{{$p->telefono}}</td>
         <td>
-            <a href="{{route('verCoche',$c->matricula)}}" class="btn btn-info btn-sm">Detalle</a>
-            <a href="{{route('modificarCoche',$c->id)}}" class="btn btn-warning btn-sm">Modificar</a>
-            <form action="{{route('eliminarCoche',$c->id)}}" method="post" style="display:inline">
+            <a href="{{route('verCoche',$p->id)}}" class="btn btn-info btn-sm">Coches</a>
+            <a href="{{route('modificarPropietario',$p->id)}}" class="btn btn-warning btn-sm">Modificar</a>
+            <form action="{{route('borrarPropietario',$p->id)}}" method="post" style="display:inline">
                 @csrf {{-- Para evitar ataques--}}
                 @method('DELETE')
                 <a href="" class="btn btn-danger btn-sm" 
-                             data-bs-toggle='modal' data-bs-target='#confirmar{{$c->id}}'>Borrar</a>
+                             data-bs-toggle='modal' data-bs-target='#confirmar{{$p->id}}'>Borrar</a>
                 <!-- The Mensaje Modal de confirmación de borrar coche -->
-                <div class="modal" id="confirmar{{$c->id}}">
+                <div class="modal" id="confirmar{{$p->id}}">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <!-- Modal Header -->
@@ -42,7 +41,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>                
                             <!-- Modal body -->
-                            <div class="modal-body">¿Deseas borrar el coche {{$c->id}}?</div>                
+                            <div class="modal-body">¿Deseas borrar el propietario {{$p->id}}?</div>                
                             <!-- Modal footer -->
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary"

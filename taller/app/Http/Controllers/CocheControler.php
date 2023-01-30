@@ -29,8 +29,8 @@ class CocheControler extends Controller
         'matricula'=>'required|min:7|max:10',
         'color'=>'required']);
         //Validar si no existe un coche con la misma matrícula
-        $coche = Coche::where('matricula',$request->matricula);
-        if($coche==null){
+        $coches = Coche::where('matricula',$request->matricula)->get();
+        if($coches->count()==0){
             //No existe otro coche con la misma matrícula
             //Crear un coche con los datos del formulario
             $coche = new Coche();
@@ -76,29 +76,31 @@ class CocheControler extends Controller
         //Carga vista de modificar coches
         $coche = Coche::find($id);
         $propietarios = Propietario::all();
-        return view('coches/modificar',compact('coche','propietarios'));
+        return view('coches/modificar',compact('coche','propietarios','id'));
     }
-    function updateCoche(Request $request){
+    function updateCoche(Request $request,$id){
         //Se llama por post y hace el update
         //Validaciones
         $request->validate(['propietario'=>'required',
         'matricula'=>'required|min:7|max:10',
         'color'=>'required']);
-
-        $cocheBD = Coche::find($request->)
-
-        //Validar si no existe un coche con la misma matrícula
-        $coche = Coche::where('matricula',$request->matricula);
-        if($coche==null){
+        //REcuperamos coche de la BD para modificarlo
+        $cocheBD = Coche::find($id);
+        
+        // Si he cambiado la matrícula
+        // Validar si no existe un coche con la misma matrícula
+        if($request->matricula!=$cocheBD->matricula){
+            $coches = Coche::where('matricula',$request->matricula)->get();
+        }
+        if(!isset($coches) or $coches->count()==0){
             //No existe otro coche con la misma matrícula
-            //Crear un coche con los datos del formulario
-            $coche = new Coche();
-            $coche->matricula = $request->matricula;
-            $coche->color = $request->color;
-            $coche->propietario_id = $request->propietario;
+            //Puedo modificar el coche con los datos del formulario
+            $cocheBD->matricula = $request->matricula;
+            $cocheBD->color = $request->color;
+            $cocheBD->propietario_id = $request->propietario;
             //Modificar el coche
-            if($coche->save()){
-                $mensaje = "Coche modficado correctamente con id ".$coche->id;
+            if($cocheBD->save()){
+                $mensaje = "Coche modficado correctamente con id ".$cocheBD->id;
             }
             else{
                 $mensaje = "Error al modificar el coche";
@@ -113,5 +115,20 @@ class CocheControler extends Controller
         //y le pasamos a la vista el mensaje para saber si ha
         //ido bien o mal
         return back()->with("mensaje",$mensaje);
+    }
+    function eliminarCoche($id){
+        //Buscar el coche en la bd
+        $cocheBD = Coche::find($id);
+
+        //Borramos el coche
+        $r = $cocheBD->delete();
+        if($r){
+            $mensaje = "Coche $id borrado";
+        }
+        else{
+            $mensaje = "Error al borrar el coche $id";
+        }
+        return back()->with("mensaje",$mensaje);
+
     }
 }

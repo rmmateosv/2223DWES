@@ -16,7 +16,7 @@
             <h1>@yield('titulo')</h1>
             <nav>
                 <a class="btn btn-info" href="{{route('verCoches')}}">Coches</a>
-                <a class="btn btn-info" href="">Propietarios</a>
+                <a class="btn btn-info" href="{{route('verPropietarios')}}">Propietarios</a>
                 <a class="btn btn-info" href="">Piezas</a>
                 <a class="btn btn-info" href="">Reparaciones</a>
             </nav>

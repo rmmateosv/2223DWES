@@ -3,14 +3,13 @@
 @section('titulo',"PÁGINA PARA MODIFICAR UN COCHE")
 
 @section('contenido')
-    <form action="{{route("updateCoche")}}" method="post">
+    <form action="{{route("updateCoche",$id)}}" method="post">
         @csrf {{-- Para evitar ataques--}}
         @method('PUT')
         <br/>
         <p>
             <label for="id">Id</label><br/>
-            <input name="id" id="id" disabled='disabled' value={{$coche->id}}/>  
-            '''CAMBIAR Y PONER EN ROUTE'                    
+            <input name="id" id="id" disabled='disabled' value="{{$coche->id}}"/>                    
         </p>
         <p>
             <label for="propietario">Selecciona Propietario</label><br/>
