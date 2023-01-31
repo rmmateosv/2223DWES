@@ -1,32 +1,33 @@
 @extends('plantilla')
 
-@section('titulo',"PÁGINA PARA VER LOS PROPIETARIOS")
+@section('titulo',"PÁGINA PARA VER LAS PIEZAS")
 
 @section('contenido')
 <div>
     <br/>
     <div>
-        <a href="{{route("crearPropietario")}}" class="btn btn-success btn-sm">Nuevo</a>
+        <a href="{{route("crearPieza")}}" class="btn btn-success btn-sm">Nuevo</a>
     </div>
     <br/>
     <table class="table table-striped">
         <tr>
             <th>Id</th>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Teléfono</th>
+            <th>Clase</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Stock</th>
         </tr>
     {{-- Mostrar los datos del array misCoches que nos pasa el controlador --}}
-    @foreach ($propietarios as $p)
+    @foreach ($piezas as $p)
     <tr>
         <td>{{$p->id}}</td>
-        <td>{{$p->nombre}}</td>
-        <td>{{$p->email}}</td>
-        <td>{{$p->telefono}}</td>
-        <td>
-            <a href="{{route('verCochesPropietario',$p->id)}}" class="btn btn-info btn-sm">Coches</a>
-            <a href="{{route('modificarPropietario',$p->id)}}" class="btn btn-warning btn-sm">Modificar</a>
-            <form action="{{route('borrarPropietario',$p->id)}}" method="post" style="display:inline">
+        <td>{{$p->clase}}</td>
+        <td>{{$p->descripcion}}</td>
+        <td>{{$p->precio}}</td>
+        <td>{{$p->stock}}</td>
+        <td>            
+            <a href="{{route('modificarPieza',$p->id)}}" class="btn btn-warning btn-sm">Modificar</a>
+            <form action="{{route('borrarPieza',$p->id)}}" method="post" style="display:inline">
                 @csrf {{-- Para evitar ataques--}}
                 @method('DELETE')
                 <a href="" class="btn btn-danger btn-sm" 
@@ -41,7 +42,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>                
                             <!-- Modal body -->
-                            <div class="modal-body">¿Deseas borrar el propietario {{$p->id}}?</div>                
+                            <div class="modal-body">¿Deseas borrar la pieza {{$p->id}}?</div>                
                             <!-- Modal footer -->
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary"

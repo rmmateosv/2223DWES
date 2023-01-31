@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Coche extends Model
 {
     use HasFactory;
+
+    //Creamos la relación muchos a 1
+    // 1 coche es de un propietario
+    function propietario(){
+        return $this->belongsTo(Propietario::class);
+    }
 }

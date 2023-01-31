@@ -78,6 +78,30 @@ class PropietarioController extends Controller
     //Request se usa ya que es donde vienen los datos del formulario de borrardo
     // En este caso, solamente el id
     function borrarPropietario(Request $request,$id){
+        //Recuperar el propietario a borrar
+        $propietario = Propietario::find($id);
+
+        //Comprobar que no tiene coches
+        if($propietario->coches()->first()!=null){
+            $mensaje = 'Error, no se puede borrar porque tiene coches';
+        }
+        else{
+            //Borrar el propietaro
+            if($propietario->delete()){
+                $mensaje = 'Propietario borrado';
+            }
+            else{
+                $mensaje = 'Error al borrar el propietario';
+            }
+        }
         
+        return back()->with('mensaje',$mensaje);
+
+    }
+    function verCochesPropietario($id){
+        //OBtener el propietario de la BD
+        $propietario = Propietario::find($id);
+        //Cargamos vista de ver coches del propietario
+        return view('propietarios/verCoches', compact('propietario'));
     }
 }

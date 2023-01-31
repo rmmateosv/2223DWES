@@ -9,6 +9,7 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
     <div class="container">
@@ -17,7 +18,7 @@
             <nav>
                 <a class="btn btn-info" href="{{route('verCoches')}}">Coches</a>
                 <a class="btn btn-info" href="{{route('verPropietarios')}}">Propietarios</a>
-                <a class="btn btn-info" href="">Piezas</a>
+                <a class="btn btn-info" href="{{route('verPiezas')}}">Piezas</a>
                 <a class="btn btn-info" href="">Reparaciones</a>
             </nav>
         </header>

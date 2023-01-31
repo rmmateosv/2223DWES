@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\CocheControler;
+use App\Http\Controllers\PiezaController;
 use App\Http\Controllers\PropietarioController;
+use App\Models\Pieza;
 use App\Models\Propietario;
 use Illuminate\Support\Facades\Route;
 
@@ -60,6 +62,27 @@ Route::controller(PropietarioController::class)->group(
         
         //Desde el formulario se borra en la bd por delete
         Route::delete("/propietarios/borrar/{id}","borrarPropietario")->name('borrarPropietario');
+
+        //Mostrar los coches del propietario
+        Route::get("/propietarios/verCoches/{id}","verCochesPropietario")->name('verCochesPropietario');
+    }
+);
+
+Route::controller(PiezaController::class)->group(
+    function(){
+        //Ver piezas
+        Route::get('/piezas','verPiezas')->name('verPiezas');
+
+        //Crear piezas
+        Route::get('/piezas/crear','crearPieza')->name('crearPieza');
+        Route::post('/piezas/insertar','insertarPieza')->name('insertarPieza');
+
+        //Modificar piezas
+        Route::get('/piezas/modificar/{id}','modificarPieza')->name('modificarPieza');
+        Route::put('/piezas/update/{id}','updatePieza')->name('updatePieza');
+
+        //Borrar piezas
+        Route::delete('/piezas/borrar/{id}','borrarPieza')->name('borrarPieza');
     }
 );
 
