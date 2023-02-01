@@ -15,16 +15,61 @@ class PiezaController extends Controller
         return view('/piezas/index',compact('piezas'));
     }
     function crearPieza(){
-        
+        return view('piezas/crear');
     }
-    function insertarPieza(Request $request,$id){
-        
+    function insertarPieza(Request $request){
+        //Validaciones
+        $request->validate([
+            "descripcion"=>"required|max:255",
+            "precio"=>"required",
+            "stock"=>"required"
+        ]);
+        //Creamos un objeto pieza
+        $pieza = new Pieza();
+        $pieza->descripcion = $request->descripcion;
+        $pieza->clase = $request->clase;
+        $pieza->precio = $request->precio;
+        $pieza->stock = $request->stock;
+        //Hacemos el insert
+        if($pieza->save()){
+            $mensaje = 'Pieza creada correctamente con id '.$pieza->id;
+            return redirect()->route('verPiezas')->with('mensaje',$mensaje);
+        }
+        else{
+            $mensaje = 'Error al crear la pieza';
+            return back()->with('mensaje',$mensaje);
+        }
+
     }
     function modificarPieza($id){
-        
+        //Obetener datos de pieza
+        $pieza = Pieza::find($id);
+        //Cargar vista modificar
+        return view('/piezas/modificar',compact('pieza'));
     }
     function updatePieza(Request $request,$id){
-        
+        //Validaciones
+        $request->validate([
+            "descripcion"=>"required|max:255",
+            "precio"=>"required",
+            "stock"=>"required"
+        ]);
+
+        // Recuperar la pieza de la bd para poder modificarla
+        $pieza = Pieza::find($id);
+        //Modificar según el formulario
+        $pieza->descripcion = $request->descripcion;
+        $pieza->clase = $request->clase;
+        $pieza->precio = $request->precio;
+        $pieza->stock = $request->stock;
+        //Guardar en la bd
+        if($pieza->save()){
+            $mensaje = 'Pieza modificada';
+        }
+        else{
+            $mensaje = 'Error al modificar la pieza';
+        }
+        return back()->with('mensaje',$mensaje);
     }
     function borrarPieza($id){
         

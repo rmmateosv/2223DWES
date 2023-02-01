@@ -16,6 +16,7 @@
             <th>Descripción</th>
             <th>Precio</th>
             <th>Stock</th>
+            <th>Acciones</th>
         </tr>
     {{-- Mostrar los datos del array misCoches que nos pasa el controlador --}}
     @foreach ($piezas as $p)
@@ -23,7 +24,7 @@
         <td>{{$p->id}}</td>
         <td>{{$p->clase}}</td>
         <td>{{$p->descripcion}}</td>
-        <td>{{$p->precio}}</td>
+        <td align="right">{{$p->precio}}</td>
         <td>{{$p->stock}}</td>
         <td>            
             <a href="{{route('modificarPieza',$p->id)}}" class="btn btn-warning btn-sm">Modificar</a>

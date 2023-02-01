@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('piezas', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->enum("clase",["Refrigeración","Fitro","Motor","Otros"]);
+            $table->enum("clase",["Refrigeración","Filtro","Motor","Otros"]);
             $table->string("descripcion");
             $table->float("precio");
             $table->integer("stock");

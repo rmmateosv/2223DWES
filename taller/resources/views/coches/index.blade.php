@@ -56,7 +56,7 @@
     </tr>        
     @endforeach
     </table>        
-    {{$misCoches->links()}}
+    {{-- {{$misCoches->links()}} --}}
 @endsection
 
 @if (session('mensaje'))

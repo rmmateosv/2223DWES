@@ -20,7 +20,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     //return view('welcome');
-    return "<h1>BIENVENIDO</h1>";
+    //return "<h1>BIENVENIDO</h1>";
+    //Redirecciona a ruta verCoches
+    return redirect()->route('verCoches');
 });
 
 Route::controller(CocheControler::class)->group(

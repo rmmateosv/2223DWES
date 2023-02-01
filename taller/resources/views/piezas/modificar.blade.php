@@ -1,41 +1,63 @@
 @extends('plantilla')
 
-@section('titulo',"PÁGINA PARA MODIFICAR UN PROPIETARIO")
+@section('titulo',"PÁGINA PARA MODIFICAR UNA PIEZA")
 
 @section('contenido')
-    <form action="{{route("updatePropietario",$propietario->id)}}" method="post">
+    <form action="{{route("updatePieza",$pieza->id)}}" method="post">
         @csrf {{-- Para evitar ataques--}}
         @method('PUT')
-        <br/>
-        
+        <br/>        
         <p>
-            <label for="nombre">Nombre del Propietario</label><br/>
-            <input name="nombre" id="nombre" placeholder="Nombre y apellidos" 
-            value="{{$propietario->nombre}}"/> 
-            @error('nombre')
-                <div class="alert alert-danger">                    
-                    Nombre es obligatorio y menor de 255   
-                    {{$errors->first('nombre')}} <!-- Para recuperar el mensaje de error del campo-->                
-                </div>                
-            @enderror            
+            <label for="clase">Clase</label><br/>
+            <select name='clase' id='clase'>
+                @if ($pieza->clase=='Refrigeración')
+                    <option selected='selected'>Refrigeración</option>
+                @else
+                    <option>Refrigeración</option>
+                @endif    
+                @if ($pieza->clase=='Fitro')
+                    <option selected='selected'>Filtro</option>
+                @else
+                    <option>Filtro</option>
+                @endif                            
+                @if ($pieza->clase=='Motor')
+                    <option selected='selected'>Motor</option>
+                @else
+                    <option>Motor</option>
+                @endif
+                @if ($pieza->clase=='Otros')
+                    <option selected='selected'>Otros</option>
+                @else
+                    <option>Otros</option>
+                @endif
+            </select>          
         </p>
         <p>
-            <label for="email">Email</label><br/>
-            <input type="email" name="email" id="email" value="{{$propietario->email}}"/>
-            @error('email')
+            <label for="descripcion">Descripción</label><br/>
+            <input type="text" name="descripcion" id="descripcion" value="{{$pieza->descripcion}}"/>
+            @error('descripcion')
                 <div class="alert alert-danger">
-                   Es obligatio rellenar el email o email incorrecto           
+                   Es obligatio rellenar la descripción y debe contener menos de 255 caracteres          
                 </div>                
             @enderror             
         </p>
         <p>
-            <label for="telefono">Teléfono</label><br/>
-            <input type="tel" name="telefono" id="telefono" value="{{$propietario->telefono}}"/>
-            @error('telefono')
+            <label for="precio">Precio</label><br/>
+            <input type="number" step="0.1" name="precio" id="precio" value="{{$pieza->precio}}"/>            
+            @error('precio')
                 <div class="alert alert-danger">
-                   Es obligatio rellenar el teléfono
+                   Precio es obligatio          
                 </div>                
-            @enderror             
+            @enderror   
+        </p>
+        <p>
+            <label for="stock">Stock</label><br/>
+            <input type="number" name="stock" id="stock" value="{{$pieza->stock}}"/>            
+            @error('stock')
+                <div class="alert alert-danger">
+                   Stock es obligatio          
+                </div>                
+            @enderror 
         </p>
         <p>            
             <input class = "btn btn-primary" type="submit" name="modificar" value="Modificar"/>             

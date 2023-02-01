@@ -13,8 +13,8 @@ class CocheControler extends Controller
         //Obtenemos los coches de la BD
         // Hacemos un select * from coches
         // Comentar para ver paginación
-        //$misCoches = Coche::all();
-        $misCoches = Coche::paginate(2);
+        $misCoches = Coche::all();
+        //$misCoches = Coche::paginate(2);
 
         // Pasamos $coches a la vista
         return view("coches/index", compact("misCoches"));
