@@ -72,7 +72,25 @@ class PiezaController extends Controller
         return back()->with('mensaje',$mensaje);
     }
     function borrarPieza($id){
-        
+        //Obtener pieza de la bd
+        $pieza = Pieza::find($id);
+        //Compropar que se puede borrar
+        //Se puede borrar si la pieza no está en ninguna pieza_reparación
+        if($pieza->piezaEnReparacion()->first()!=null){
+            $mensaje = 'Error, no se puede borrar la pieza porque hay reparaciones';
+        }
+        else{
+            //borrar pieza
+            if($pieza->delete()){
+                $mensaje = 'Pieza borrada';
+            }
+            else{
+                $mensaje = 'Error al borrar la pieza';
+            }
+            
+        }
+        //Volvemos a cargar página piezas/index
+        return back()->with('mensaje',$mensaje);
     }
 
 }

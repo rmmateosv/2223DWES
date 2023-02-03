@@ -9,4 +9,9 @@ class Pieza_reparacion extends Model
 {
     use HasFactory;
     protected $table = "pieza_reparaciones";
+
+    function pieza(){
+        //Recupera la pieza de esta pieza_reparación
+        return $this->belongsTo(Pieza::class);
+    }
 }

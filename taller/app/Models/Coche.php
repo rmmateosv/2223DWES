@@ -14,4 +14,8 @@ class Coche extends Model
     function propietario(){
         return $this->belongsTo(Propietario::class);
     }
+
+    function reparaciones(){
+        return $this->hasMany(Reparacion::class);
+    }
 }

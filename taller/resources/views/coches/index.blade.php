@@ -23,7 +23,7 @@
         <td>{{$c->id}}</td>
         <td>{{$c->matricula}}</td>
         <td>{{$c->color}}</td>
-        <td>{{$c->propietario_id}}</td>
+        <td>{{$c->propietario->nombre}}</td>
         <td>
             <a href="{{route('verCoche',$c->matricula)}}" class="btn btn-info btn-sm">Detalle</a>
             <a href="{{route('modificarCoche',$c->id)}}" class="btn btn-warning btn-sm">Modificar</a>

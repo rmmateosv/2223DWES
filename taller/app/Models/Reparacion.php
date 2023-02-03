@@ -11,4 +11,8 @@ class Reparacion extends Model
     //Este modelo espera que la tabla se llame reparacions,
     //pero nuestra tabla se llama reparaciones
     protected $table = "reparaciones";
+
+    function coche(){
+        return $this->belongsTo(Coche::class);
+    }
 }

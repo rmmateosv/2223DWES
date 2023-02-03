@@ -3,6 +3,7 @@
 use App\Http\Controllers\CocheControler;
 use App\Http\Controllers\PiezaController;
 use App\Http\Controllers\PropietarioController;
+use App\Http\Controllers\ReparacionController;
 use App\Models\Pieza;
 use App\Models\Propietario;
 use Illuminate\Support\Facades\Route;
@@ -85,6 +86,19 @@ Route::controller(PiezaController::class)->group(
 
         //Borrar piezas
         Route::delete('/piezas/borrar/{id}','borrarPieza')->name('borrarPieza');
+    }
+);
+Route::controller(ReparacionController::class)->group(
+    function(){
+        //Ver reparaciones
+        Route::get('/reparaciones','verReparaciones')->name('verReparaciones');
+        //Crear reparación
+        //Solamente tenemos post porque no vamos a hacer un formulario para crear
+        Route::post('/reparaciones/insertar','insertarReparacion')->name('insertarReparacion');
+        //Modficar reparación
+        //Solamente tenemos get porque modificar una reparación lo que va a hacer
+        //es gestionar pieza_reparacion
+        Route::get('/reparaciones/modificar/{id}','modificarReparacion')->name('modificarReparacion');
     }
 );
 

@@ -14,8 +14,8 @@
             <th>Id</th>
             <th>Clase</th>
             <th>Descripción</th>
-            <th>Precio</th>
-            <th>Stock</th>
+            <th style="text-align:right;">Precio</th>
+            <th style="text-align:right;">Stock</th>
             <th>Acciones</th>
         </tr>
     {{-- Mostrar los datos del array misCoches que nos pasa el controlador --}}
@@ -24,8 +24,8 @@
         <td>{{$p->id}}</td>
         <td>{{$p->clase}}</td>
         <td>{{$p->descripcion}}</td>
-        <td align="right">{{$p->precio}}</td>
-        <td>{{$p->stock}}</td>
+        <td align="right">{{number_format($p->precio, 2) }}</td>
+        <td align="right">{{$p->stock}}</td>
         <td>            
             <a href="{{route('modificarPieza',$p->id)}}" class="btn btn-warning btn-sm">Modificar</a>
             <form action="{{route('borrarPieza',$p->id)}}" method="post" style="display:inline">
