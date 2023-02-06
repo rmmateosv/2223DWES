@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Coche;
+use App\Models\Pieza;
 use App\Models\Reparacion;
 use Illuminate\Http\Request;
 
@@ -40,6 +41,8 @@ class ReparacionController extends Controller
     public function modificarReparacion($id){
         // Obtener datos de reparación
         $r = Reparacion::find($id);
+        //Obtener piezas para el formulario de crear piezaReparación
+        $piezas = Pieza::oderBy('clase','descripcion')->get();
         //Redirigir a vista de piezas para la repación
         return view('/reparaciones/modificar',compact('r'));
     }

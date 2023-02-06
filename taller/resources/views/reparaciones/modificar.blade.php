@@ -1,18 +1,18 @@
 @extends('plantilla')
 
-@section('titulo',"PÁGINA PARA ")
+@section('titulo',"PÁGINA PARA MODIFICAR REPARACIÓN")
 
 @section('contenido')
 <div>
     <br/>
     <div>
-        <form action="{{route("insertarReparacion")}}" method="POST">
+        <form action="{{route("insertaPiezaReparacion",$r->id)}}" method="POST">
             @csrf
-            <button type="submit"class="btn btn-success btn-sm">Nuevo</button>
-            <select name="coche">
-                <option value="-1">-- Selecciona Matrícula --</option>
-                @foreach ($coches as $c)
-                    <option value="{{$c->id}}">{{$c->matricula}}-{{$c->propietario->nombre}}</option>
+            <button type="submit"class="btn btn-success btn-sm">Nueva Pieza</button>
+            <select name="pieza">
+                <option value="-1">-- Selecciona Pieza --</option>
+                @foreach ($piezas as $p)
+                    <option value="{{$p->id}}">{{$p->clase}}-{{$p->descripcion}}</option>
                 @endforeach
             </select>        
         </form>

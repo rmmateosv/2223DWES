@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CocheControler;
 use App\Http\Controllers\PiezaController;
+use App\Http\Controllers\PiezaReparacionController;
 use App\Http\Controllers\PropietarioController;
 use App\Http\Controllers\ReparacionController;
 use App\Models\Pieza;
@@ -101,7 +102,17 @@ Route::controller(ReparacionController::class)->group(
         Route::get('/reparaciones/modificar/{id}','modificarReparacion')->name('modificarReparacion');
     }
 );
-
+Route::controller(PiezaReparacionController::class)->group(
+    function(){
+        //Añadir una pieza a la reparación
+        Route::post('/pr/insertar/{id}','insertaPiezaReparacion')->name('insertaPiezaReparacion');
+        //Borrar pieza de la reparación
+        Route::delete('/pr/borrar/{id}','borrarPiezaReparacion')->name('borrarPiezaReparacion');
+        //Modificar pieza de reparación
+        Route::get('/pr/modificar/{id}','modificarPiezaReparacion')->name('modificarPiezaReparacion');
+        Route::put('/pr/modificar/{id}','updatePiezaReparacion')->name('updatePiezaReparacion');
+    }
+);
 
 //Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
