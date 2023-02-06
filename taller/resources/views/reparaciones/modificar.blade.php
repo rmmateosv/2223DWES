@@ -1,6 +1,6 @@
 @extends('plantilla')
 
-@section('titulo',"PÁGINA PARA VER LAS REPARACIONES")
+@section('titulo',"PÁGINA PARA ")
 
 @section('contenido')
 <div>
