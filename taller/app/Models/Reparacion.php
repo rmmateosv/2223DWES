@@ -15,4 +15,8 @@ class Reparacion extends Model
     function coche(){
         return $this->belongsTo(Coche::class);
     }
+
+    function piezasReparacion(){
+        return $this->hasMany(Pieza_reparacion::class)->get();
+    }
 }

@@ -14,4 +14,8 @@ class Pieza_reparacion extends Model
         //Recupera la pieza de esta pieza_reparación
         return $this->belongsTo(Pieza::class);
     }
+    function reparacion(){
+        //Recupera la reparacon de esta pieza_reparación
+        return $this->belongsTo(Reparacion::class);
+    }
 }

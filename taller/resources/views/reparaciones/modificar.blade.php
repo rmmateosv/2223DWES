@@ -1,10 +1,22 @@
 @extends('plantilla')
 
-@section('titulo',"PÁGINA PARA MODIFICAR REPARACIÓN")
+@section('titulo',"PÁGINA PARA MODIFICAR REPARACIÓN:")
 
 @section('contenido')
 <div>
     <br/>
+    <div>
+        <p>
+            <span class='text-success'>Reparación:</span><span>{{$r->id}}</span>
+        </p>
+        <p>
+            <span class='text-success'>Fecha:</span> <span>{{date('d/m/Y H:i:s',strtotime($r->fecha))}}</span>
+        </p>        
+        <p>
+            <span class='text-success'>Matrícula:</span> <span>{{$r->coche->matricula}}</span>
+            <span class='text-success'> Propietario:</span> <span>{{$r->coche->propietario->nombre}}</span>
+        </p>              
+    </div>
     <div>
         <form action="{{route("insertaPiezaReparacion",$r->id)}}" method="POST">
             @csrf
@@ -21,21 +33,17 @@
     <br/>
     <table class="table table-striped">
         <tr>
-            <th>Id</th>
-            <th>Matrícula</th>
-            <th>Fecha</th>
-            <th style="text-align:right;">Tiempo</th>
-            <th style="text-align:center;">Pagado</th>
+            <th>Pieza</th>
+            <th style="text-align:right;">Cantidad</th>
+            <th style="text-align:right;">Importe</th>
             <th>Acciones</th>
         </tr>
-    {{-- Mostrar los datos del array misCoches que nos pasa el controlador --}}
-    @foreach ($reparaciones as $r)
+    {{-- Mostrar las pieza de la reparación --}}
+    @foreach ($r->piezasReparacion() as $pr)
     <tr>
-        <td>{{$r->id}}</td>
-        <td>{{$r->coche->matricula}}</td>
-        <td>{{date("d/m/Y H:i:s",strtotime($r->fecha))}}</td>
-        <td align="right">{{$r->tiempo}}</td>
-        <td style="text-align:center;">{{($r->pagado==0?"-":"v")}}</td>
+        <td>{{$pr->pieza->descripcion}}</td>
+        <td align="right">{{$pr->cantidad}}</td>
+        <td align="right">{{number_format($pr->importe,2,',')}}</td>
         <td>            
             <a href="{{route('modificarReparacion',$r->id)}}" class="btn btn-warning btn-sm">Modificar</a>                      
         </td>

@@ -42,8 +42,8 @@ class ReparacionController extends Controller
         // Obtener datos de reparación
         $r = Reparacion::find($id);
         //Obtener piezas para el formulario de crear piezaReparación
-        $piezas = Pieza::oderBy('clase','descripcion')->get();
+        $piezas = Pieza::orderBy('clase')->orderBy('descripcion')->get();
         //Redirigir a vista de piezas para la repación
-        return view('/reparaciones/modificar',compact('r'));
+        return view('/reparaciones/modificar',compact('r','piezas'));
     }
 }
