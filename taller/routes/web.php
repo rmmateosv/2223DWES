@@ -1,12 +1,11 @@
 <?php
 
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CocheControler;
 use App\Http\Controllers\PiezaController;
 use App\Http\Controllers\PiezaReparacionController;
 use App\Http\Controllers\PropietarioController;
 use App\Http\Controllers\ReparacionController;
-use App\Models\Pieza;
-use App\Models\Propietario;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -108,11 +107,20 @@ Route::controller(PiezaReparacionController::class)->group(
         Route::post('/pr/insertar/{id}','insertaPiezaReparacion')->name('insertaPiezaReparacion');
         //Borrar pieza de la reparación
         Route::delete('/pr/borrar/{id}','borrarPiezaReparacion')->name('borrarPiezaReparacion');
-        //Modificar pieza de reparación
-        Route::get('/pr/modificar/{id}','modificarPiezaReparacion')->name('modificarPiezaReparacion');
+        //Incrementar/Decrementar cantidad en la pieza de la reparación        
         Route::put('/pr/modificar/{id}','updatePiezaReparacion')->name('updatePiezaReparacion');
     }
 );
 
+Route::controller(LoginController::class)->group(
+    function(){
+        Route::get('/login/registro','registro')->name('registro');
+        Route::post('/login/registro','registrar')->name('registrar');
+        Route::get('/login/login','login')->name('login');
+        Route::post('/login/logear','logear')->name('logear');
+        Route::get('/login/salir','salir')->name('salir');
+    }
+);
+
 //Auth::routes();
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

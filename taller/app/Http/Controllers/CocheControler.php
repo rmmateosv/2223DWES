@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 class CocheControler extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+    }
     //
     function verCoches(){
         //Obtenemos los coches de la BD

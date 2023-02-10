@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('pieza_reparaciones', function (Blueprint $table) {
+            $table->id();
             $table->timestamps();
             $table->foreignId("reparacion_id")
                   ->references("id")->on('reparaciones')
@@ -25,7 +26,7 @@ return new class extends Migration
                   ->onUpdate('cascade');
             $table->integer("cantidad");
             $table->float("importe");
-            $table->primary(['reparacion_id','pieza_id']);
+            $table->unique(['reparacion_id','pieza_id']);
 
         });
     }

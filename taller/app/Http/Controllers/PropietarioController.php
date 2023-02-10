@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 class PropietarioController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+    }
     //
     function verPropietarios(){
         //Obtener de la bd todos los propietarios

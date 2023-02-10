@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 
 class ReparacionController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function verReparaciones(){
         //Cargar reparaciones de la bd ordenadas por fecha descendente
         $reparaciones = Reparacion::orderBy('fecha','desc')->get();

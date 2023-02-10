@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class PiezaController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+    }
     function verPiezas(){
         //Obtener piezas de la bd
         $piezas=Pieza::all();
