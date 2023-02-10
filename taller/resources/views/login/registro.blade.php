@@ -13,9 +13,31 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
+    <style>
+        .align-right {
+            text-align: right;
+        }
+
+        .align-center {
+            text-align: center;
+        }
+
+        .contenedor {
+            display: grid;
+            grid-template-columns: 50%;
+            margin-top: 30px;
+            justify-content: center
+        }
+
+        #boton {
+            text-align: center;
+        }
+    </style>
+    
     <div class="contenedor">
         <br/>
         <div>
+            <h1>Registro taller</h1>
             <form action="{{route("registrar")}}" method="POST">
                 @csrf
                 <!-- Nombre input -->
