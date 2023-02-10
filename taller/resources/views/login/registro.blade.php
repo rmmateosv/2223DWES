@@ -1,50 +1,62 @@
-@extends('plantilla')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Registro</title>
 
-@section('titulo',"PÁGINA PARA VER LAS REPARACIONES")
+    <!-- Scripts -->
+    {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
+    <script src="{{ asset('js/app.js') }}" defer></script>
+    <!-- Styles -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="contenedor">
+        <br/>
+        <div>
+            <form action="{{route("registrar")}}" method="POST">
+                @csrf
+                <!-- Nombre input -->
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" />
+                    @error('nombre')
+                        <p class="text-danger">Nombre es obligatorio</p>                    
+                    @enderror
+                </div>
+                <!-- Email input -->
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="email">Email:</label>
+                    <input type="email" id="email" name="email" class="form-control" />
+                    @error('email')
+                        <p class="text-danger">Email es obligatorio, con formato correcto y no se puede repetir</p>                    
+                    @enderror
+                </div>
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="pass">Contraseña:</label>
+                    <input type="password" id="pass" name="pass" class="form-control" />
+                    @error('pass')
+                        <p class="text-danger">Passwrod es obligatorio y mínimo 8 caracteres</p>                    
+                    @enderror
+                </div>    
+                <!-- Submit button -->
+                <div id="boton">
+                    <button type="submit" class="btn btn-primary btn-block mb-4">Registrar</button>
+                </div>  
+            </form>
+            <div>
+                <span class="text-danger">
+                    @if (session('mensaje'))
+                        {{session('mensaje')}}
+                    @endif
+                </span>
+            </div>
+        </div>
+        <br/>     
+    </div>   
+</body>
+</html>
 
-@section('contenido')
-<div>
-    <br/>
-    <div>
-        <form action="{{route("insertarReparacion")}}" method="POST">
-            @csrf
-            <button type="submit"class="btn btn-success btn-sm">Nuevo</button>
-            <select name="coche">
-                <option value="-1">-- Selecciona Matrícula --</option>
-                @foreach ($coches as $c)
-                    <option value="{{$c->id}}">{{$c->matricula}}-{{$c->propietario->nombre}}</option>
-                @endforeach
-            </select>        
-        </form>
-        
-    </div>
-    <br/>
-    <table class="table table-striped">
-        <tr>
-            <th>Id</th>
-            <th>Matrícula</th>
-            <th>Fecha</th>
-            <th style="text-align:right;">Tiempo</th>
-            <th style="text-align:center;">Pagado</th>
-            <th>Acciones</th>
-        </tr>
-    {{-- Mostrar los datos del array misCoches que nos pasa el controlador --}}
-    @foreach ($reparaciones as $r)
-    <tr>
-        <td>{{$r->id}}</td>
-        <td>{{$r->coche->matricula}}</td>
-        <td>{{date("d/m/Y H:i:s",strtotime($r->fecha))}}</td>
-        <td align="right">{{$r->tiempo}}</td>
-        <td style="text-align:center;">{{($r->pagado==0?"-":"v")}}</td>
-        <td>            
-            <a href="{{route('modificarReparacion',$r->id)}}" class="btn btn-warning btn-sm">Modificar</a>                      
-        </td>
-    </tr>        
-    @endforeach
-    </table>        
-    
-@endsection
-
-@if (session('mensaje'))
-    @section('mensaje',session('mensaje'))
-@endif

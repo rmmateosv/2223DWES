@@ -46,25 +46,38 @@
             <div class="form-outline mb-4">
                 <label class="form-label" for="email">Email:</label>
                 <input type="email" id="email" name="email" class="form-control" />
+                @error('email')
+                    <p class="text-danger">Email es obligatorio y con formato correcto</p>                    
+                @enderror
             </div>
 
             <!-- Password input -->
             <div class="form-outline mb-4">
                 <label class="form-label" for="pass">Contraseña:</label>
                 <input type="password" id="pass" name="pass" class="form-control" />
+                @error('pass')
+                    <p class="text-danger">Passwrod es obligatorio y mínimo 8 caracteres</p>                    
+                @enderror
             </div>
 
             <!-- Submit button -->
             <div id="boton">
-                <button type="button" class="btn btn-primary btn-block mb-4">Login</button>
+                <button type="submit" class="btn btn-primary btn-block mb-4">Login</button>
             </div>
             <!-- Register buttons -->
             <div class="text-center">
                 <p>¿No tienes cuenta?
-                    <a href="#!">Registrar</a>
+                    <a href="{{route('registro')}}">Registrar</a>
                 </p>
             </div>
         </form>
+        <div>
+            <span class="text-danger">
+                @if (session('mensaje'))
+                    {{session('mensaje')}}
+                @endif
+            </span>
+        </div>
 
     </div>
 

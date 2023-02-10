@@ -21,6 +21,7 @@
                 <a class="btn btn-info" href="{{route('verPropietarios')}}">Propietarios</a>
                 <a class="btn btn-info" href="{{route('verPiezas')}}">Piezas</a>
                 <a class="btn btn-info" href="{{route('verReparaciones')}}">Reparaciones</a>
+                <a class="btn btn-secondary" href="{{route('salir')}}">Salir</a>
             </nav>
         </header>
         <main>

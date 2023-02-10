@@ -24,7 +24,7 @@ Route::get('/', function () {
     //return "<h1>BIENVENIDO</h1>";
     //Redirecciona a ruta verCoches
     return redirect()->route('verCoches');
-});
+})->name('inicio');
 
 Route::controller(CocheControler::class)->group(
     function(){
@@ -117,7 +117,7 @@ Route::controller(LoginController::class)->group(
         Route::get('/login/registro','registro')->name('registro');
         Route::post('/login/registro','registrar')->name('registrar');
         Route::get('/login/login','login')->name('login');
-        Route::post('/login/logear','logear')->name('logear');
+        Route::post('/login/login','logear')->name('logear');
         Route::get('/login/salir','salir')->name('salir');
     }
 );
