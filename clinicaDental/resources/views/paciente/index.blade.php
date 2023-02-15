@@ -3,6 +3,7 @@
 @section('titulo','Pacientes')
 
 @section('contenido')
+    <a class="btn btn-outline-primary" href="{{route('crearPaciente')}}">+</a>
     <table class="table">
         <thead>
             <tr>
@@ -21,10 +22,35 @@
                 <td>{{$p->nombre}}</td>
                 <td>{{$p->telefono}}</td>
                 <td>{{$p->email}}</td>
-                <td>{{$p->fechaNac}}</td>
-                <td>
-                    <a class="btn btn-outline-warning" href="/paciente/modificar">Modificar</a>
-                </td>
+                <td>{{date('d/m/Y',strtotime($p->fechaNac))}}</td>
+                <form action="{{route('borrarPaciente',$p->dni)}}" method="post">
+                    @csrf
+                    @method('DELETE')
+                    <td>
+                        <a class="btn btn-outline-primary" href="/paciente/modificar/{{$p->dni}}">Modificar</a>
+                        <a href="" class="btn btn-outline-danger" 
+                             data-bs-toggle='modal' data-bs-target='#confirmar{{$p->dni}}'>Borrar</a>
+                        <!-- The Mensaje Modal de confirmación de borrar coche -->
+                        <div class="modal" id="confirmar{{$p->dni}}">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Confirmación</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>                
+                                    <!-- Modal body -->
+                                    <div class="modal-body">¿Deseas borrar el paciente {{$p->dni}}?</div>                
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-outline-primary"
+                                            data-bs-dismiss="modal" name="borrar">Borrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </form>
             </tr>  
             @endforeach
                       
