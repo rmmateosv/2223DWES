@@ -22,14 +22,14 @@
                 <td>{{$p->nombre}}</td>
                 <td>{{$p->telefono}}</td>
                 <td>{{$p->email}}</td>
-                <td>{{date('d/m/Y',strtotime($p->fechaNac))}}</td>
-                <form action="{{route('borrarPaciente',$p->dni)}}" method="post">
-                    @csrf
-                    @method('DELETE')
-                    <td>
-                        <a class="btn btn-outline-primary" href="/paciente/modificar/{{$p->dni}}">Modificar</a>
+                <td>{{date('d/m/Y',strtotime($p->fechaNac))}}</td>                
+                <td>
+                    <a class="btn btn-outline-primary" href="/paciente/modificar/{{$p->dni}}">Modificar</a>
+                    <form action="{{route('borrarPaciente',$p->dni)}}" method="post">
+                        @csrf
+                        @method('DELETE')
                         <a href="" class="btn btn-outline-danger" 
-                             data-bs-toggle='modal' data-bs-target='#confirmar{{$p->dni}}'>Borrar</a>
+                                data-bs-toggle='modal' data-bs-target='#confirmar{{$p->dni}}'>Borrar</a>
                         <!-- The Mensaje Modal de confirmación de borrar coche -->
                         <div class="modal" id="confirmar{{$p->dni}}">
                             <div class="modal-dialog">
@@ -43,14 +43,15 @@
                                     <div class="modal-body">¿Deseas borrar el paciente {{$p->dni}}?</div>                
                                     <!-- Modal footer -->
                                     <div class="modal-footer">
-                                        <button type="submit" class="btn btn-outline-primary"
+                                        <button type="submit" class="btn btn-outline-danger"
                                             data-bs-dismiss="modal" name="borrar">Borrar</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </td>
-                </form>
+                    </form>
+                </td>
+                
             </tr>  
             @endforeach
                       
