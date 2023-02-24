@@ -1,38 +1,33 @@
 @extends('plantilla')
 
-@section('titulo','Pacientes')
+@section('titulo','Dentistas')
 
 @section('contenido')
-    <a class="btn btn-outline-primary" href="{{route('crearPaciente')}}">+</a>
+    <a class="btn btn-outline-primary" href="{{route('crearDentista')}}">+</a>
     <table class="table">
         <thead>
             <tr>
-                <th>Dni</th>
+                <th>Colegiado</th>
                 <th>Nombre</th>
-                <th>Teléfono</th>
-                <th>Email</th>
-                <th>Fecha Nacimiento</th>
-                <th>Acciones</th>
+                <th>Especialidad</th>      
+                <th>Acciones</th>           
             </tr>
         </thead>
         <tbody>
-            @foreach ($pacientes as $p)
+            @foreach ($dentistas as $d)
             <tr>
-                <td>{{$p->dni}}</td>
-                <td>{{$p->nombre}}</td>
-                <td>{{$p->telefono}}</td>
-                <td>{{$p->email}}</td>
-                <td>{{date('d/m/Y',strtotime($p->fechaNac))}}</td>                
+                <td>{{$d->numCol}}</td>
+                <td>{{$d->nombre}}</td>
+                <td>{{$d->especialidad}}</td>                         
                 <td>
-                    <form action="{{route('borrarPaciente',$p->dni)}}" method="post">
-                    <a class="btn btn-outline-primary" href="{{route('modificarPaciente',$p->dni)}}">Modificar</a>
-                    
+                    <form action="{{route('borrarDentista',$d->numCol)}}" method="post">
+                    <a class="btn btn-outline-primary" href="{{route('modificarDentista',$d->numCol)}}">Modificar</a>                    
                         @csrf
                         @method('DELETE')
                         <a href="" class="btn btn-outline-danger" 
-                                data-bs-toggle='modal' data-bs-target='#confirmar{{$p->dni}}'>Borrar</a>
+                                data-bs-toggle='modal' data-bs-target='#confirmar{{$d->numCol}}'>Borrar</a>
                         <!-- The Mensaje Modal de confirmación de borrar coche -->
-                        <div class="modal" id="confirmar{{$p->dni}}">
+                        <div class="modal" id="confirmar{{$d->numCol}}">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <!-- Modal Header -->
@@ -41,7 +36,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>                
                                     <!-- Modal body -->
-                                    <div class="modal-body">¿Deseas borrar el paciente {{$p->dni}}?</div>                
+                                    <div class="modal-body">¿Deseas borrar el dentista {{$d->numCol}}?</div>                
                                     <!-- Modal footer -->
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-outline-danger"

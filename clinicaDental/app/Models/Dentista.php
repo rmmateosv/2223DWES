@@ -10,6 +10,6 @@ class Dentista extends Model
     use HasFactory;
     
     public function citas(){
-        return $this->hasMany(Cita::class);
+        return $this->hasMany(Cita::class,'dentista')->get();
     }
 }
