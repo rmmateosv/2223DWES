@@ -9,10 +9,10 @@ class Cita extends Model
 {
     use HasFactory;
 
-    public function paciente(){
-        return $this->belongsTo(Paciente::class);
+    public function datosPaciente(){
+        return $this->belongsTo(Paciente::class,'paciente','dni');
     }
-    public function dentista(){
-        return $this->belongsTo(Dentista::class);
+    public function datosDentista(){
+        return $this->belongsTo(Dentista::class,'dentista','numCol');
     }
 }

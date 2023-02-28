@@ -30,7 +30,7 @@
                     <option selected='selected'>OdontoPediatría</option>
                 @else
                     <option>OdontoPediatría</option>
-                @endif+
+                @endif
 
                 @if (old('especialidad')=='Periodoncia')
                     <option selected='selected'>Periodoncia</option>
