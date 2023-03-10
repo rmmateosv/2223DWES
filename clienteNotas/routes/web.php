@@ -28,7 +28,7 @@ Route::controller(NotasController::class)->group(
         Route::get('/notas/modificar/{id}', "modificarNota")->name('modificarNota');
         Route::put('/notas/modificar/{id}', "updateNota")->name('updateNota');
 
-        Route::delete('/notas/borrar/{id}', "borrarNota")->name('borrarNota');
+        Route::get('/notas/borrar/{id}', "borrarNota")->name('borrarNota');
 
     }
 );

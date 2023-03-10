@@ -24,7 +24,7 @@ class NotaController extends Controller
     {
         //Crear nota
         $nota = new Nota();
-        //$nota->nombre = $request->nombre;
+        $nota->nombre = $request->nombre;
         $nota->asig = $request->asig;
         $nota->nota = $request->nota;
         //Guardar en la bd $options = 0)
